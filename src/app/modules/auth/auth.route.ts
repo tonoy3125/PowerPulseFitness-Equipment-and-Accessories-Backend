@@ -10,4 +10,6 @@ router.post(
   AuthControllers.signUp,
 )
 
+
+
 export const AuthRoutes = router

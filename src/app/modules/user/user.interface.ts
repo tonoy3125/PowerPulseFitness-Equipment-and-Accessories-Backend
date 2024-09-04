@@ -9,6 +9,7 @@ export type TUser = {
   email: string
   password: string
   role: TUserRoles
+  fullName?: string
 }
 
 export interface UserModel extends Model<TUser> {

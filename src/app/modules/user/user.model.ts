@@ -26,11 +26,24 @@ const userSchema = new Schema<TUser>(
       type: String,
       enum: ['user', 'admin'],
     },
+    fullName: {
+      type: String,
+      required: false, // This field is optional
+    },
   },
+
   {
     timestamps: true,
   },
 )
+
+// Update fullName before saving
+userSchema.pre('save', function (next) {
+  if (this.isModified('firstName') || this.isModified('lastName')) {
+    this.fullName = `${this.firstName} ${this.lastName}`
+  }
+  next()
+})
 
 // Password Hashing before saving data in DB
 userSchema.pre('save', async function (next) {

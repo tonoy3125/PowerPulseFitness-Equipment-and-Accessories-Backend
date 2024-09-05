@@ -3,7 +3,8 @@ import { AppError } from '../../errors/AppError'
 import { TUser } from '../user/user.interface'
 import { User } from '../user/user.model'
 import { TLoginUser } from './auth.interface'
-import jwt from 'jsonwebtoken'
+
+import createToken, { verifyToken } from './auth.utils'
 import config from '../../config'
 
 const signUp = async (payload: TUser) => {
@@ -37,17 +38,55 @@ const login = async (payload: TLoginUser) => {
     role: user?.role,
   }
 
-  const token = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
-    expiresIn: config.jwt_access_expires_in,
-  })
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  )
+
+  // Refresh Token
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  )
 
   return {
-    token,
+    accessToken,
+    refreshToken,
     user,
+  }
+}
+
+const refreshToken = async (token: string) => {
+  const decoded = verifyToken(token, config.jwt_refresh_secret as string)
+  // console.log(decoded)
+  const { email, role } = decoded
+  // check if the user is exits
+  const user = await User.isUserExistsByEmail(email)
+  // console.log(user)
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists')
+  }
+
+  const jwtPayload = {
+    email: user?.email,
+    role: user?.role,
+  }
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  )
+  return {
+    accessToken,
   }
 }
 
 export const AuthServices = {
   signUp,
   login,
+  refreshToken,
 }

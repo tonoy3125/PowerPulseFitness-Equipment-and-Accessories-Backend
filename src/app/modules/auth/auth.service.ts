@@ -6,6 +6,7 @@ import { TLoginUser } from './auth.interface'
 
 import createToken, { verifyToken } from './auth.utils'
 import config from '../../config'
+import { sendEmail } from '../../utils/sendEmail'
 
 const signUp = async (payload: TUser) => {
   const result = await User.create(payload)
@@ -85,8 +86,36 @@ const refreshToken = async (token: string) => {
   }
 }
 
+const forgetPassword = async (email: string) => {
+  // check if the user is exits
+  const user = await User.isUserExistsByEmail(email)
+  // console.log(user)
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists')
+  }
+
+  // Token
+
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+  }
+
+  const resetToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    '10m',
+  )
+
+  const resetUiLink = `${config.reset_pass_ui_link}?id=${user.email}&token=${resetToken}`
+  sendEmail(user.email, resetUiLink)
+  console.log(resetUiLink)
+}
+
 export const AuthServices = {
   signUp,
   login,
   refreshToken,
+  forgetPassword,
 }

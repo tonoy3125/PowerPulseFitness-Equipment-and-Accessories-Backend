@@ -118,10 +118,7 @@ const resetPassword = async (payload: TResetPassword, token) => {
   // check if the token is valid
 
   const decoded = verifyToken(token, config.jwt_access_secret as string)
-
-  if (!decoded) {
-    throw new AppError(httpStatus.UNAUTHORIZED, 'Token is invalid or expired')
-  }
+  // console.log(token)
 
   if (payload.newPassword !== payload.confirmNewPassword) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Passwords do not match')
@@ -134,7 +131,7 @@ const resetPassword = async (payload: TResetPassword, token) => {
     Number(config.bcrypt_salt_rounds),
   )
 
-  await User.findOneAndUpdate(
+  const user = await User.findOneAndUpdate(
     {
       email: decoded?.email,
       role: decoded?.role,
@@ -146,6 +143,33 @@ const resetPassword = async (payload: TResetPassword, token) => {
       new: true,
     },
   )
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exist')
+  }
+
+  const jwtPayload = {
+    email: user?.email,
+    role: user?.role,
+  }
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  )
+
+  // Refresh Token
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  )
+
+  return {
+    accessToken,
+    refreshToken,
+  }
 }
 
 export const AuthServices = {

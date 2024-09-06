@@ -2,7 +2,8 @@ import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { TUser } from '../user/user.interface'
 import { User } from '../user/user.model'
-import { TLoginUser } from './auth.interface'
+import { TLoginUser, TResetPassword } from './auth.interface'
+import bcrypt from 'bcrypt'
 
 import createToken, { verifyToken } from './auth.utils'
 import config from '../../config'
@@ -113,9 +114,44 @@ const forgetPassword = async (email: string) => {
   console.log(resetUiLink)
 }
 
+const resetPassword = async (payload: TResetPassword, token) => {
+  // check if the token is valid
+
+  const decoded = verifyToken(token, config.jwt_access_secret as string)
+
+  if (!decoded) {
+    throw new AppError(httpStatus.UNAUTHORIZED, 'Token is invalid or expired')
+  }
+
+  if (payload.newPassword !== payload.confirmNewPassword) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Passwords do not match')
+  }
+
+  // console.log(decoded);
+  // Hashed new password
+  const newHashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  )
+
+  await User.findOneAndUpdate(
+    {
+      email: decoded?.email,
+      role: decoded?.role,
+    },
+    {
+      password: newHashedPassword,
+    },
+    {
+      new: true,
+    },
+  )
+}
+
 export const AuthServices = {
   signUp,
   login,
   refreshToken,
   forgetPassword,
+  resetPassword,
 }

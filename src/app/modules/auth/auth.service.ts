@@ -93,7 +93,10 @@ const forgetPassword = async (email: string) => {
   // console.log(user)
 
   if (!user) {
-    throw new AppError(httpStatus.NOT_FOUND, 'User does not exists')
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'No account found with that email.',
+    )
   }
 
   // Token

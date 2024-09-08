@@ -16,4 +16,11 @@ router.post(
 
 router.get('/', ProductControllers.getAllProduct)
 
+router.put(
+  '/:id',
+  auth(USER_ROLE.admin),
+  validateRequest(ProductValidations.updateProductValidationSchema),
+  ProductControllers.updateProduct,
+)
+
 export const ProductRoutes = router

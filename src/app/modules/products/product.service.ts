@@ -13,6 +13,7 @@ const getAllProductFromDB = async () => {
   return result
 }
 
+
 const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
   const product = await Product.findById(id)
 
@@ -24,8 +25,18 @@ const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
   return result
 }
 
+const deleteProductFromDB = async (id: string) => {
+  const result = await Product.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true },
+  )
+  return result
+}
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductFromDB,
   updateProductIntoDB,
+  deleteProductFromDB,
 }

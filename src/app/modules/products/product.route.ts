@@ -16,11 +16,15 @@ router.post(
 
 router.get('/', ProductControllers.getAllProduct)
 
+router.get('/:id', ServiceControllers.getSingleService)
+
 router.put(
   '/:id',
   auth(USER_ROLE.admin),
   validateRequest(ProductValidations.updateProductValidationSchema),
   ProductControllers.updateProduct,
 )
+
+router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 
 export const ProductRoutes = router

@@ -63,7 +63,7 @@ const login = async (payload: TLoginUser) => {
 const refreshToken = async (token: string) => {
   const decoded = verifyToken(token, config.jwt_refresh_secret as string)
   // console.log(decoded)
-  const { email, role } = decoded
+  const { email } = decoded
   // check if the user is exits
   const user = await User.isUserExistsByEmail(email)
   // console.log(user)
@@ -117,7 +117,7 @@ const forgetPassword = async (email: string) => {
   console.log(resetUiLink)
 }
 
-const resetPassword = async (payload: TResetPassword, token) => {
+const resetPassword = async (payload: TResetPassword, token: string) => {
   try {
     // Verify the token, throws an error if expired or invalid
     const decoded = verifyToken(token, config.jwt_access_secret as string)

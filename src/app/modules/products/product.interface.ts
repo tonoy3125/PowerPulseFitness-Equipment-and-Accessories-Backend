@@ -1,4 +1,4 @@
-type TCategory =
+export type TCategory =
   | 'Cardio'
   | 'Weightlifting Bars & Weights'
   | 'Strength Equipments'
@@ -25,4 +25,5 @@ export type TProduct = {
   description: string
   images: string[]
   category: TCategory
+  isDeleted: boolean
 }

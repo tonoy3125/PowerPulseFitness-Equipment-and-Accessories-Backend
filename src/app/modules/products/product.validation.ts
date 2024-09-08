@@ -17,6 +17,30 @@ const createProductValidationSchema = z.object({
   }),
 })
 
+const updateProductValidationSchema = z.object({
+  body: z.object({
+    name: z.string({ required_error: 'Name is required' }).optional(),
+    price: z.number({ required_error: 'Price is required' }).optional(),
+    sku: z.string({ required_error: 'Sku is required' }).optional(),
+    stockQuantity: z
+      .number({ required_error: 'Stock quantity is required' })
+      .optional(),
+    description: z
+      .string({ required_error: 'Description is required' })
+      .optional(),
+    images: z
+      .array(z.string(), { required_error: 'Images are required' })
+      .min(1, { message: 'At least one image is required' })
+      .optional(),
+    category: z
+      .enum(TCategoryTypes, {
+        required_error: 'Category is required',
+      })
+      .optional(),
+  }),
+})
+
 export const ProductValidations = {
   createProductValidationSchema,
+  updateProductValidationSchema,
 }

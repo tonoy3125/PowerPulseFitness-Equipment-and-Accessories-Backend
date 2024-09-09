@@ -2,15 +2,27 @@ import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { TProduct } from './product.interface'
 import { Product } from './product.model'
+import QueryBuilder from '../../builder/QueryBuilder'
+import { productSearchableField } from './product.constant'
 
 const createProductIntoDB = async (payload: TProduct) => {
   const result = await Product.create(payload)
   return result
 }
 
-const getAllProductFromDB = async () => {
-  const result = await Product.find()
-  return result
+const getAllProductFromDB = async (query: Record<string, unknown>) => {
+  console.log('base query', query)
+
+  const productQuery = new QueryBuilder(Product.find(), query)
+    .search(productSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
+
+  const meta = await productQuery.countTotal()
+  const result = await productQuery.modelQuery
+  return { meta, result }
 }
 
 const getSingleProductFromDB = async (id: string) => {

@@ -17,6 +17,7 @@ router.post(
 router.get('/', ProductControllers.getAllProduct)
 
 router.get('/:id', ProductControllers.getSingleProduct)
+router.get('/category/:category', ProductControllers.getSingleCategory)
 
 router.put(
   '/:id',

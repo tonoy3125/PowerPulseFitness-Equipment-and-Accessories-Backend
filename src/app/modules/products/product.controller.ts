@@ -22,7 +22,8 @@ const getAllProduct = catchAsync(async (req, res) => {
     statusCode: products.length > 0 ? httpStatus.OK : httpStatus.NOT_FOUND,
     message:
       products.length > 0 ? 'Product retrieved successfully' : 'No Data Found',
-    data: result,
+    meta: result.meta,
+    data: result.result,
   })
 })
 

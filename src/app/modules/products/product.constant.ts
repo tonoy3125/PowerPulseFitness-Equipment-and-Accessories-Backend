@@ -4,7 +4,7 @@ export const TCategoryTypes = [
   'Strength Equipments',
   'Conditioning',
   'Body Weight And Gymnastics',
-  'Straps, Wraps And Support',
+  'Straps Wraps And Support',
   'Fitness Accessories',
   'Yoga And Pilates',
   'Mats And Flooring',

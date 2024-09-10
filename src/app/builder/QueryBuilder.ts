@@ -29,13 +29,30 @@ class QueryBuilder<T> {
     const queryObj = { ...this.query } // copy
 
     // Filtering
-    const excludeFields = ['searchTerm', 'sort', 'limit', 'page', 'fields']
+    const excludeFields = [
+      'searchTerm',
+      'sort',
+      'limit',
+      'page',
+      'fields',
+      'minPrice',
+      'maxPrice',
+    ]
 
     excludeFields.forEach((el) => delete queryObj[el])
 
     // Handle multiple categories
     if (queryObj.category && Array.isArray(queryObj.category)) {
       queryObj.category = { $in: queryObj.category }
+    }
+
+    // Handle price range
+    if (this.query.minPrice || this.query.maxPrice) {
+      const priceRange: Record<string, number> = {}
+      if (this.query.minPrice) priceRange['$gte'] = Number(this.query.minPrice)
+      if (this.query.maxPrice) priceRange['$lte'] = Number(this.query.maxPrice)
+
+      queryObj.price = priceRange
     }
 
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>)
@@ -81,7 +98,7 @@ class QueryBuilder<T> {
     const totalQueries = this.modelQuery.getFilter()
     const total = await this.modelQuery.model.countDocuments(totalQueries)
     const page = Number(this?.query?.page) || 1
-    const limit = Number(this?.query?.limit) || 10
+    const limit = Number(this?.query?.limit) || 9
     const totalPage = Math.ceil(total / limit)
 
     return {

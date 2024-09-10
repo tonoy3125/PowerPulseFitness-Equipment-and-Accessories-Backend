@@ -33,6 +33,11 @@ class QueryBuilder<T> {
 
     excludeFields.forEach((el) => delete queryObj[el])
 
+    // Handle multiple categories
+    if (queryObj.category && Array.isArray(queryObj.category)) {
+      queryObj.category = { $in: queryObj.category }
+    }
+
     this.modelQuery = this.modelQuery.find(queryObj as FilterQuery<T>)
 
     return this
@@ -56,7 +61,7 @@ class QueryBuilder<T> {
 
   paginate() {
     const page = Number(this?.query?.page) || 1
-    const limit = Number(this?.query?.limit) || 10
+    const limit = Number(this?.query?.limit) || 9
     const skip = (page - 1) * limit
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit)

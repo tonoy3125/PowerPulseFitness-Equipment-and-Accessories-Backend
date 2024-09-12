@@ -13,6 +13,18 @@ const createWishlist = catchAsync(async (req, res) => {
   })
 })
 
+const getAllWishlist = catchAsync(async (req, res) => {
+  const result = await WishlistServices.getAllWishlistFromDB()
+  sendResponse(res, {
+    success: result.length ? true : false,
+    statusCode: result.length ? httpStatus.OK : httpStatus.NOT_FOUND,
+    message: result.length
+      ? 'Wishlist retrieved successfully'
+      : 'No Data Found',
+    data: result,
+  })
+})
+
 const removeWishlist = catchAsync(async (req, res) => {
   const { productId } = req.params
 
@@ -25,7 +37,19 @@ const removeWishlist = catchAsync(async (req, res) => {
   })
 })
 
+const clearAllWishlist = catchAsync(async (req, res) => {
+  const result = await WishlistServices.clearAllWishlistFromDB()
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'All wishlists cleared successfully',
+    data: result,
+  })
+})
+
 export const WishlistControllers = {
   createWishlist,
+  getAllWishlist,
   removeWishlist,
+  clearAllWishlist,
 }

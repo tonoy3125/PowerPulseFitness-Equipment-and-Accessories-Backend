@@ -10,6 +10,10 @@ router.post(
   WishlistControllers.createWishlist,
 )
 
+router.get('/', WishlistControllers.getAllWishlist)
+
 router.delete('/:productId', WishlistControllers.removeWishlist)
+
+router.delete('/clear/all', WishlistControllers.clearAllWishlist)
 
 export const WishlistRoutes = router

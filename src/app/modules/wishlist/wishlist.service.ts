@@ -7,7 +7,7 @@ const createWishlistIntoDB = async (payload: TWishlist) => {
 }
 
 const getAllWishlistFromDB = async () => {
-  const result = await Wishlist.find()
+  const result = await Wishlist.find().populate('productId').populate('userId')
   return result
 }
 

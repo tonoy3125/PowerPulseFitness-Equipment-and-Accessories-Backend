@@ -35,7 +35,7 @@ const getProductsByCategoryFromDB = async (category: string) => {
   const result = await Product.aggregate([
     {
       $match: {
-        category: { $regex: new RegExp(category, 'i') },
+        category: { $regex: new RegExp(`^${category}$`, 'i') },
       },
     },
     {

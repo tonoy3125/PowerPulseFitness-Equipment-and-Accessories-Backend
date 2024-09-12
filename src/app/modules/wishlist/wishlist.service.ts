@@ -6,6 +6,16 @@ const createWishlistIntoDB = async (payload: TWishlist) => {
   return result
 }
 
+const removeWishlistIntoDB = async (productId: string) => {
+  const result = await Wishlist.findOneAndUpdate(
+    { productId },
+    { isDeleted: true },
+    { new: true },
+  )
+  return result
+}
+
 export const WishlistServices = {
   createWishlistIntoDB,
+  removeWishlistIntoDB,
 }

@@ -11,9 +11,9 @@ const getAllWishlistFromDB = async () => {
   return result
 }
 
-const removeWishlistIntoDB = async (productId: string) => {
+const removeWishlistIntoDB = async (productId: string, userId: string) => {
   const result = await Wishlist.findOneAndUpdate(
-    { productId },
+    { productId, userId },
     { isDeleted: true },
     { new: true },
   )

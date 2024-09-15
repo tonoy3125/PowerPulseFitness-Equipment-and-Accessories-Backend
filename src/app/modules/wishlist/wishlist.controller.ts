@@ -4,7 +4,11 @@ import catchAsync from '../../utils/catchAsync'
 import { WishlistServices } from './wishlist.service'
 
 const createWishlist = catchAsync(async (req, res) => {
-  const result = await WishlistServices.createWishlistIntoDB(req.body)
+  const userId = req.user._id // Assuming req.user contains the authenticated user's data
+  const payload = { ...req.body, userId } // Merge userId with the incoming request data
+  // console.log('User send ', payload)
+  const result = await WishlistServices.createWishlistIntoDB(payload)
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -26,9 +30,10 @@ const getAllWishlist = catchAsync(async (req, res) => {
 })
 
 const removeWishlist = catchAsync(async (req, res) => {
+  const userId = req.user._id
   const { productId } = req.params
 
-  const result = await WishlistServices.removeWishlistIntoDB(productId)
+  const result = await WishlistServices.removeWishlistIntoDB(productId, userId)
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

@@ -6,8 +6,10 @@ const createWishlistIntoDB = async (payload: TWishlist) => {
   return result
 }
 
-const getAllWishlistFromDB = async () => {
-  const result = await Wishlist.find().populate('productId').populate('userId')
+const getUserWishlistFromDB = async (userId: string) => {
+  const result = await Wishlist.find({ userId, isDeleted: false })
+    .populate('productId')
+    .populate('userId')
   return result
 }
 
@@ -27,7 +29,7 @@ const clearAllWishlistFromDB = async () => {
 
 export const WishlistServices = {
   createWishlistIntoDB,
-  getAllWishlistFromDB,
+  getUserWishlistFromDB,
   removeWishlistIntoDB,
   clearAllWishlistFromDB,
 }

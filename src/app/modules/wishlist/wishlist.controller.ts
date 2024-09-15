@@ -17,8 +17,9 @@ const createWishlist = catchAsync(async (req, res) => {
   })
 })
 
-const getAllWishlist = catchAsync(async (req, res) => {
-  const result = await WishlistServices.getAllWishlistFromDB()
+const getUserWishlist = catchAsync(async (req, res) => {
+  const userId = req.user._id // Assuming req.user contains the authenticated user's data
+  const result = await WishlistServices.getUserWishlistFromDB(userId)
   sendResponse(res, {
     success: result.length ? true : false,
     statusCode: result.length ? httpStatus.OK : httpStatus.NOT_FOUND,
@@ -54,7 +55,7 @@ const clearAllWishlist = catchAsync(async (req, res) => {
 
 export const WishlistControllers = {
   createWishlist,
-  getAllWishlist,
+  getUserWishlist,
   removeWishlist,
   clearAllWishlist,
 }

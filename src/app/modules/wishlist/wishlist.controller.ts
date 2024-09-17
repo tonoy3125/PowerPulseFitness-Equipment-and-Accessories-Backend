@@ -3,16 +3,18 @@ import sendResponse from '../../utils/sendResponse'
 import catchAsync from '../../utils/catchAsync'
 import { WishlistServices } from './wishlist.service'
 
-const createWishlist = catchAsync(async (req, res) => {
+const toggleWishlistItem = catchAsync(async (req, res) => {
   const userId = req.user._id // Assuming req.user contains the authenticated user's data
-  const payload = { ...req.body, userId } // Merge userId with the incoming request data
-  // console.log('User send ', payload)
-  const result = await WishlistServices.createWishlistIntoDB(payload)
+  const { productId } = req.params // Assuming productId is passed as a URL parameter
 
+  const result = await WishlistServices.addOrRemoveWishlistItem(
+    userId,
+    productId,
+  )
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Product Added To wishlist Successfully',
+    message: result.message,
     data: result,
   })
 })
@@ -30,19 +32,6 @@ const getUserWishlist = catchAsync(async (req, res) => {
   })
 })
 
-const removeWishlist = catchAsync(async (req, res) => {
-  const userId = req.user._id
-  const { productId } = req.params
-
-  const result = await WishlistServices.removeWishlistIntoDB(productId, userId)
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: 'Product Remove To wishlist Successfully',
-    data: result,
-  })
-})
-
 const clearAllWishlist = catchAsync(async (req, res) => {
   const result = await WishlistServices.clearAllWishlistFromDB()
   sendResponse(res, {
@@ -54,8 +43,7 @@ const clearAllWishlist = catchAsync(async (req, res) => {
 })
 
 export const WishlistControllers = {
-  createWishlist,
   getUserWishlist,
-  removeWishlist,
+  toggleWishlistItem,
   clearAllWishlist,
 }

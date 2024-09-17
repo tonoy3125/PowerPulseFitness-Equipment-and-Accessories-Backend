@@ -11,6 +11,10 @@ router.post(
 
 router.get('/', auth('admin', 'user'), WishlistControllers.getUserWishlist)
 
-router.delete('/clear/all', WishlistControllers.clearAllWishlist)
+router.delete(
+  '/clear/all',
+  auth('admin', 'user'),
+  WishlistControllers.clearAllWishlist,
+)
 
 export const WishlistRoutes = router

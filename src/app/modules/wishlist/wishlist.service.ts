@@ -43,8 +43,8 @@ const getUserWishlistFromDB = async (userId: string) => {
   return result
 }
 
-const clearAllWishlistFromDB = async () => {
-  const result = await Wishlist.updateMany({}, { isDeleted: true })
+const clearAllWishlistFromDB = async (userId: string) => {
+  const result = await Wishlist.updateMany({ userId }, { isDeleted: true })
   return result
 }
 

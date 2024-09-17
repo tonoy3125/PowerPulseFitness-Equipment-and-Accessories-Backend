@@ -23,17 +23,16 @@ const getUserWishlist = catchAsync(async (req, res) => {
   const userId = req.user._id // Assuming req.user contains the authenticated user's data
   const result = await WishlistServices.getUserWishlistFromDB(userId)
   sendResponse(res, {
-    success: result.length ? true : false,
-    statusCode: result.length ? httpStatus.OK : httpStatus.NOT_FOUND,
-    message: result.length
-      ? 'Wishlist retrieved successfully'
-      : 'No Data Found',
+    success: true,
+    statusCode: httpStatus.OK,
+    message: result.message,
     data: result,
   })
 })
 
 const clearAllWishlist = catchAsync(async (req, res) => {
-  const result = await WishlistServices.clearAllWishlistFromDB()
+  const userId = req.user._id
+  const result = await WishlistServices.clearAllWishlistFromDB(userId)
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

@@ -8,46 +8,59 @@ const createAddToCartItemIntoDB = async (
   userId: string,
   quantity: number,
 ) => {
-  // Find The Product By Product Id
+  // Find the product by productId
   const product = await Product.findById(productId)
 
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Product Not Found By Product Id')
   }
 
-  //   If the cart doesn't exist, create a new one
+  // If the cart doesn't exist, create a new one
   let cart = await AddToCart.findOne({ userId })
 
   if (!cart) {
     cart = new AddToCart({
       userId,
       items: [],
+      subTotal: 0, // Initialize total subtotal
     })
   }
 
-  //   Check if the product already exists in the cart
+  // Check if the product already exists in the cart
   const existingCartItem = cart.items.find(
     (item) => item.productId.toString() === productId.toString(),
   )
 
   if (existingCartItem) {
-    // If the product is already in the cart, increase the quantity, ensuring it doesn't exceed the stock quantity
+    // If the product is already in the cart, increase the quantity
     const newQuantity = existingCartItem.quantity + quantity
     if (newQuantity > product.stockQuantity) {
       throw new AppError(httpStatus.FORBIDDEN, 'Stock Quantity Exceeded')
     }
     existingCartItem.quantity = newQuantity
-    existingCartItem.subTotal = existingCartItem.quantity * product.price
   } else {
     // If the product is not in the cart, add it as a new item
     cart.items.push({
       productId,
       quantity: Math.min(quantity, product.stockQuantity),
-      subTotal: quantity * product.price,
       isDeleted: false,
     })
   }
-  // Save the cart with the updated items
+
+  // Recalculate the total cart subtotal synchronously
+  let subTotal = 0
+
+  for (const item of cart.items) {
+    const productInCart = await Product.findById(item.productId) // Fetch the product to get the price
+    if (productInCart) {
+      subTotal += item.quantity * productInCart.price
+    }
+  }
+
+  // Assign the calculated subtotal to the cart
+  cart.subTotal = subTotal
+
+  // Save the cart with the updated items and total subtotal
   await cart.save()
 
   return cart
@@ -84,7 +97,14 @@ const removeCartItemIntoDB = async (userId: string, productId: string) => {
   // Remove the item from the cart
   cart.items.splice(existingCartItemIndex, 1)
 
-  // If the cart has no more items, you can decide to delete the cart itself or leave it empty
+  // Recalculate the total subtotal for all items in the cart
+  cart.subTotal = await cart.items.reduce(async (totalPromise, item) => {
+    const total = await totalPromise // Resolve previous total
+    const product = await Product.findById(item.productId) // Fetch the product to get the price
+    return total + (product ? item.quantity * product.price : 0)
+  }, Promise.resolve(0))
+
+  // If the cart has no more items, delete the cart itself
   if (cart.items.length === 0) {
     await AddToCart.deleteOne({ userId })
   } else {

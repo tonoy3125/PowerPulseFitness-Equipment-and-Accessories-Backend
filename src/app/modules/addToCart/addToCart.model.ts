@@ -20,16 +20,19 @@ const AddToCartSchema = new Schema<TAddToCart>(
           required: true,
           min: 1,
         },
-        subTotal: {
-          type: Number,
-          required: true,
-        },
         isDeleted: {
           type: Boolean,
           default: false,
         },
       },
     ],
+    orderNote: {
+      type: String,
+    },
+    subTotal: {
+      type: Number,
+      required: true,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

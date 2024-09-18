@@ -1,10 +1,14 @@
 import { Types } from 'mongoose'
 
-export type TAddToCart = {
+export type TCartItem = {
   productId: Types.ObjectId
-  userId: Types.ObjectId
   quantity: number
   subTotal: number
-  orderNote: string
+  isDeleted: boolean
+}
+
+export type TAddToCart = {
+  userId: Types.ObjectId
+  items: TCartItem[] // Add the items array
   isDeleted: boolean
 }

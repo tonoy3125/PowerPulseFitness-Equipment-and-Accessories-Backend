@@ -20,6 +20,21 @@ const createAddToCart = catchAsync(async (req, res) => {
   })
 })
 
+const removeCartItem = catchAsync(async (req, res) => {
+  const userId = req.user._id
+  const { productId } = req.body
+
+  const result = await AddToCartServices.removeCartItem(userId, productId)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Cart Item Removed Successfully',
+    data: result,
+  })
+})
+
 export const AddToCartControllers = {
   createAddToCart,
+  removeCartItem,
 }

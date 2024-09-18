@@ -53,6 +53,37 @@ const createAddToCartItem = async (
   return cart
 }
 
+const removeCartItem = async (userId: string, productId: string) => {
+  // Find the cart by userId
+  const cart = await AddToCart.findOne({ userId })
+
+  if (!cart) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found')
+  }
+
+  // Find the item in the cart by productId
+  const existingCartItemIndex = cart.items.findIndex(
+    (item) => item.productId.toString() === productId.toString(),
+  )
+
+  if (existingCartItemIndex === -1) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product Not Found In Cart')
+  }
+
+  // Remove the item from the cart
+  cart.items.splice(existingCartItemIndex, 1)
+
+  // If the cart has no more items, you can decide to delete the cart itself or leave it empty
+  if (cart.items.length === 0) {
+    await AddToCart.deleteOne({ userId })
+  } else {
+    await cart.save()
+  }
+
+  return cart
+}
+
 export const AddToCartServices = {
   createAddToCartItem,
+  removeCartItem,
 }

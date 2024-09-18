@@ -14,4 +14,10 @@ router.post(
   AddToCartControllers.createAddToCart,
 )
 
+router.delete(
+  '/remove',
+  auth('admin', 'user'),
+  AddToCartControllers.removeCartItem,
+)
+
 export const AddToCartRoutes = router

@@ -14,6 +14,12 @@ router.post(
   AddToCartControllers.createAddToCart,
 )
 
+router.get(
+  '/user-cart',
+  auth('admin', 'user'),
+  AddToCartControllers.getUserCartItems,
+)
+
 router.delete(
   '/remove',
   auth('admin', 'user'),

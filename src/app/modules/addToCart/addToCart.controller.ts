@@ -7,7 +7,7 @@ const createAddToCart = catchAsync(async (req, res) => {
   const userId = req.user._id
   const { productId, quantity } = req.body
 
-  const result = await AddToCartServices.createAddToCartItem(
+  const result = await AddToCartServices.createAddToCartItemIntoDB(
     productId,
     userId,
     quantity,
@@ -20,11 +20,24 @@ const createAddToCart = catchAsync(async (req, res) => {
   })
 })
 
+const getUserCartItems = catchAsync(async (req, res) => {
+  const userId = req.user._id
+
+  const cart = await AddToCartServices.getUserCartItemsFromDB(userId)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Cart Retrieved Successfully',
+    data: cart,
+  })
+})
+
 const removeCartItem = catchAsync(async (req, res) => {
   const userId = req.user._id
   const { productId } = req.body
 
-  const result = await AddToCartServices.removeCartItem(userId, productId)
+  const result = await AddToCartServices.removeCartItemIntoDB(userId, productId)
 
   sendResponse(res, {
     success: true,
@@ -36,5 +49,6 @@ const removeCartItem = catchAsync(async (req, res) => {
 
 export const AddToCartControllers = {
   createAddToCart,
+  getUserCartItems,
   removeCartItem,
 }

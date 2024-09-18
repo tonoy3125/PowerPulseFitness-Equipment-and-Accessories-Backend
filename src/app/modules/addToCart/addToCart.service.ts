@@ -3,7 +3,7 @@ import { AppError } from '../../errors/AppError'
 import { Product } from '../products/product.model'
 import { AddToCart } from './addToCart.model'
 
-const createAddToCartItem = async (
+const createAddToCartItemIntoDB = async (
   productId: string,
   userId: string,
   quantity: number,
@@ -53,7 +53,18 @@ const createAddToCartItem = async (
   return cart
 }
 
-const removeCartItem = async (userId: string, productId: string) => {
+const getUserCartItemsFromDB = async (userId: string) => {
+  // Find the cart by userId
+  const cart = await AddToCart.findOne({ userId })
+
+  if (!cart) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found for the User')
+  }
+
+  return cart
+}
+
+const removeCartItemIntoDB = async (userId: string, productId: string) => {
   // Find the cart by userId
   const cart = await AddToCart.findOne({ userId })
 
@@ -84,6 +95,7 @@ const removeCartItem = async (userId: string, productId: string) => {
 }
 
 export const AddToCartServices = {
-  createAddToCartItem,
-  removeCartItem,
+  createAddToCartItemIntoDB,
+  getUserCartItemsFromDB,
+  removeCartItemIntoDB,
 }

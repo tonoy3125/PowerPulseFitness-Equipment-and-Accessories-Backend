@@ -30,7 +30,7 @@ const getSingleProductFromDB = async (id: string) => {
   return result
 }
 
-const getProductsByCategoryFromDB = async (category: string) => {
+const getProductsByCategoryFromDB = async (category) => {
   // Aggregation pipeline
   const result = await Product.aggregate([
     {
@@ -39,22 +39,44 @@ const getProductsByCategoryFromDB = async (category: string) => {
       },
     },
     {
+      $group: {
+        _id: '$category', // Group by category
+        totalCount: { $sum: 1 }, // Count each product in the category
+        products: {
+          // Include all product details
+          $push: {
+            _id: '$_id',
+            name: '$name',
+            category: '$category',
+            price: '$price',
+            sku: '$sku',
+            stockQuantity: '$stockQuantity',
+            description: '$description',
+            images: '$images',
+            createdAt: '$createdAt',
+            updatedAt: '$updatedAt',
+          },
+        },
+      },
+    },
+    {
       $project: {
-        name: 1,
-        price: 1,
-        sku: 1,
-        stockQuantity: 1,
-        description: 1,
-        images: 1,
-        category: 1,
-        isDeleted: 1,
-        createdAt: 1,
-        updatedAt: 1,
+        category: '$_id',
+        totalCount: 1,
+        products: 1,
       },
     },
   ])
 
   return result
+}
+
+const getProductByIdInCategory = async (category, id) => {
+  const product = await Product.findOne({
+    _id: id,
+    category: { $regex: new RegExp(`^${category}$`, 'i') },
+  })
+  return product
 }
 
 const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
@@ -82,6 +104,7 @@ export const ProductServices = {
   getAllProductFromDB,
   getSingleProductFromDB,
   getProductsByCategoryFromDB,
+  getProductByIdInCategory,
   updateProductIntoDB,
   deleteProductFromDB,
 }

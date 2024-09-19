@@ -50,6 +50,18 @@ const getSingleCategory = catchAsync(async (req, res) => {
   })
 })
 
+const getSingleProductInCategory = catchAsync(async (req, res) => {
+  const { category, id } = req.params
+  const result = await ProductServices.getProductByIdInCategory(category, id)
+
+  sendResponse(res, {
+    success: result ? true : false,
+    statusCode: result ? httpStatus.OK : httpStatus.NOT_FOUND,
+    message: result ? 'Product retrieved successfully' : 'No Data Found',
+    data: result ? result : [],
+  })
+})
+
 const updateProduct = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await ProductServices.updateProductIntoDB(id, req.body)
@@ -77,6 +89,7 @@ export const ProductControllers = {
   getAllProduct,
   getSingleProduct,
   getSingleCategory,
+  getSingleProductInCategory,
   updateProduct,
   deleteProduct,
 }

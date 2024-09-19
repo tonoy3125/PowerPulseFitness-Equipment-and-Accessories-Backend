@@ -18,6 +18,7 @@ router.get('/', ProductControllers.getAllProduct)
 
 router.get('/:id', ProductControllers.getSingleProduct)
 router.get('/category/:category', ProductControllers.getSingleCategory)
+router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
 
 router.put(
   '/:id',

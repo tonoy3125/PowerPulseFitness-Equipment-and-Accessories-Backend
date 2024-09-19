@@ -79,6 +79,67 @@ const getUserCartItemsFromDB = async (userId: string) => {
   return cart
 }
 
+const updateCartItemQuantity = async (
+  userId: string,
+  productId: string,
+  change: number,
+) => {
+  const cart = await AddToCart.findOne({ userId })
+
+  if (!cart) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found')
+  }
+
+  const cartItem = cart.items.find(
+    (item) => item.productId.toString() === productId.toString(),
+  )
+
+  if (!cartItem) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product Not Found In Cart')
+  }
+
+  const product = await Product.findById(productId)
+
+  if (!product) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product Not Found')
+  }
+
+  const newQuantity = cartItem.quantity + change
+
+  if (newQuantity <= 0) {
+    // Remove item if quantity is zero or less
+    cart.items = cart.items.filter(
+      (item) => item.productId.toString() !== productId.toString(),
+    )
+  } else if (newQuantity > product.stockQuantity) {
+    throw new AppError(httpStatus.FORBIDDEN, 'Stock Quantity Exceeded')
+  } else {
+    cartItem.quantity = newQuantity
+  }
+
+  cart.subTotal = await cart.items.reduce(async (totalPromise, item) => {
+    const total = await totalPromise
+    const productInCart = await Product.findById(item.productId)
+    return total + (productInCart ? item.quantity * productInCart.price : 0)
+  }, Promise.resolve(0))
+
+  if (cart.items.length === 0) {
+    await AddToCart.deleteOne({ userId })
+  } else {
+    await cart.save()
+  }
+
+  return cart
+}
+
+const increaseCartItemQuantity = async (userId: string, productId: string) => {
+  return updateCartItemQuantity(userId, productId, 1)
+}
+
+const decreaseCartItemQuantity = async (userId: string, productId: string) => {
+  return updateCartItemQuantity(userId, productId, -1)
+}
+
 const removeCartItemIntoDB = async (userId: string, productId: string) => {
   // Find the cart by userId
   const cart = await AddToCart.findOne({ userId })
@@ -119,5 +180,7 @@ const removeCartItemIntoDB = async (userId: string, productId: string) => {
 export const AddToCartServices = {
   createAddToCartItemIntoDB,
   getUserCartItemsFromDB,
+  increaseCartItemQuantity,
+  decreaseCartItemQuantity,
   removeCartItemIntoDB,
 }

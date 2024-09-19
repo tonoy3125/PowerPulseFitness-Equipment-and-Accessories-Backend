@@ -20,6 +20,22 @@ router.get(
   AddToCartControllers.getUserCartItems,
 )
 
+// Route to increase quantity
+router.patch(
+  '/increase-quantity',
+  auth('admin', 'user'),
+  validateRequest(AddToCardValidations.updateCartItemValidationSchema),
+  AddToCartControllers.increaseQuantity,
+)
+
+// Route to decrease quantity
+router.patch(
+  '/decrease-quantity',
+  auth('admin', 'user'),
+  validateRequest(AddToCardValidations.updateCartItemValidationSchema),
+  AddToCartControllers.decreaseQuantity,
+)
+
 router.delete(
   '/remove',
   auth('admin', 'user'),

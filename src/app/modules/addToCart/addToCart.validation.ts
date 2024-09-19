@@ -9,7 +9,11 @@ const createAddToCartValidationSchema = z.object({
 })
 
 const updateCartItemValidationSchema = z.object({
-  productId: z.string().uuid().nonempty(),
+  body: z.object({
+    productId: z
+      .string({ required_error: 'Product is required' })
+      .nonempty('Product ID cannot be empty'), // Required and non-empty productId
+  }),
 })
 
 export const AddToCardValidations = {

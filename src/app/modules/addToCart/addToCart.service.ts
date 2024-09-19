@@ -69,6 +69,8 @@ const createAddToCartItemIntoDB = async (
 const getUserCartItemsFromDB = async (userId: string) => {
   // Find the cart by userId
   const cart = await AddToCart.findOne({ userId })
+    .populate('items.productId')
+    .populate('userId')
 
   if (!cart) {
     throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found for the User')

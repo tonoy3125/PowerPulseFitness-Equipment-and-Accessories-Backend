@@ -8,6 +8,11 @@ const createAddToCartValidationSchema = z.object({
   }),
 })
 
+const updateCartItemValidationSchema = z.object({
+  productId: z.string().uuid().nonempty(),
+})
+
 export const AddToCardValidations = {
   createAddToCartValidationSchema,
+  updateCartItemValidationSchema,
 }

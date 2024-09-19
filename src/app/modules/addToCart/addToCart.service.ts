@@ -72,10 +72,6 @@ const getUserCartItemsFromDB = async (userId: string) => {
     .populate('items.productId')
     .populate('userId')
 
-  if (!cart) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found for the User')
-  }
-
   return cart
 }
 
@@ -143,10 +139,6 @@ const decreaseCartItemQuantity = async (userId: string, productId: string) => {
 const removeCartItemIntoDB = async (userId: string, productId: string) => {
   // Find the cart by userId
   const cart = await AddToCart.findOne({ userId })
-
-  if (!cart) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found')
-  }
 
   // Find the item in the cart by productId
   const existingCartItemIndex = cart.items.findIndex(

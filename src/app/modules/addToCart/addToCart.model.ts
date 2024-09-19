@@ -26,9 +26,6 @@ const AddToCartSchema = new Schema<TAddToCart>(
         },
       },
     ],
-    orderNote: {
-      type: String,
-    },
     subTotal: {
       type: Number,
       required: true,

@@ -9,7 +9,6 @@ export type TCartItem = {
 export type TAddToCart = {
   userId: Types.ObjectId
   items: TCartItem[] // Add the items array
-  orderNote: string
   subTotal: number
   isDeleted: boolean
 }

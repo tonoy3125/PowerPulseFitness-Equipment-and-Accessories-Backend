@@ -37,9 +37,19 @@ class QueryBuilder<T> {
       'fields',
       'minPrice',
       'maxPrice',
+      'stockAvailability',
     ]
 
     excludeFields.forEach((el) => delete queryObj[el])
+
+    // Handle stockAvailability filter
+    if (this.query.stockAvailability) {
+      if (this.query.stockAvailability === 'In Stock') {
+        queryObj.stockQuantity = { $gt: 0 } // Products with stockQuantity greater than 0
+      } else if (this.query.stockAvailability === 'Out of Stock') {
+        queryObj.stockQuantity = { $eq: 0 } // Products with stockQuantity equal to 0
+      }
+    }
 
     // Handle multiple categories
     if (queryObj.category && Array.isArray(queryObj.category)) {

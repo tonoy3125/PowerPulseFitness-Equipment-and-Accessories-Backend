@@ -40,7 +40,16 @@ const ProductSchema = new Schema<TProduct>(
       default: false,
     },
   },
-  { timestamps: true },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  },
 )
+
+// Virtual field for stock availability
+ProductSchema.virtual('stockAvailability').get(function () {
+  return this.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'
+})
 
 export const Product = model<TProduct>('Product', ProductSchema)

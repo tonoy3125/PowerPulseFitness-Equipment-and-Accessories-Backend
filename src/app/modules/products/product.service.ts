@@ -20,9 +20,20 @@ const getAllProductFromDB = async (query: Record<string, unknown>) => {
     .paginate()
     .fields()
 
+  // Sort in-stock products first
+  productQuery.modelQuery = productQuery.modelQuery.sort({
+    stockQuantity: -1, // In-stock products first
+  })
+
   const meta = await productQuery.countTotal()
   const result = await productQuery.modelQuery
-  return { meta, result }
+  // Separate out-of-stock products to the end
+  const inStockProducts = result.filter((product) => product.stockQuantity > 0)
+  const outOfStockProducts = result.filter(
+    (product) => product.stockQuantity === 0,
+  )
+  const sortedResult = [...inStockProducts, ...outOfStockProducts]
+  return { meta, result: sortedResult }
 }
 
 const getSingleProductFromDB = async (id: string) => {

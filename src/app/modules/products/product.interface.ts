@@ -22,7 +22,8 @@ export type TProduct = {
   price: number
   sku: string
   stockQuantity: number
-  description: string
+  shortDescription: string
+  longDescription: string
   images: string[]
   category: TCategory
   stockAvailability?: string

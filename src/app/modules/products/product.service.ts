@@ -1,11 +1,36 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { TProduct } from './product.interface'
 import { Product } from './product.model'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { productSearchableField } from './product.constant'
+import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
 
-const createProductIntoDB = async (payload: TProduct) => {
+const createProductIntoDB = async (
+  files: Express.Multer.File[],
+  payload: TProduct,
+) => {
+  if (files && files.length > 0) {
+    const imageNamePrefix = `${payload?.name}-${payload?.category}`
+
+    // Upload each image to Cloudinary
+    const uploadedImages = await Promise.all(
+      files.map(async (file, index) => {
+        const imageName = `${imageNamePrefix}-${index + 1}`
+        const path = file.path
+
+        // Upload to Cloudinary
+        const { secure_url } = await sendImageToCloudinary(imageName, path)
+        return secure_url as string
+      }),
+    )
+
+    // Add uploaded image URLs to the payload
+    payload.images = [...(payload.images || []), ...uploadedImages]
+  }
+
+  // Create the product with the updated payload
   const result = await Product.create(payload)
   return result
 }

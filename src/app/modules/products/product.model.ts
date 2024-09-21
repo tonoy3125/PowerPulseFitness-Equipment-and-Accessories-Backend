@@ -22,7 +22,11 @@ const ProductSchema = new Schema<TProduct>(
       required: true,
       min: 0,
     },
-    description: {
+    shortDescription: {
+      type: String,
+      required: true,
+    },
+    longDescription: {
       type: String,
       required: true,
     },

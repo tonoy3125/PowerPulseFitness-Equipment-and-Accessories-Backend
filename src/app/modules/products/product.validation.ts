@@ -7,10 +7,15 @@ const createProductValidationSchema = z.object({
     price: z.number({ required_error: 'Price is required' }),
     sku: z.string({ required_error: 'Sku is required' }),
     stockQuantity: z.number({ required_error: 'Stock quantity is required' }),
-    description: z.string({ required_error: 'Description is required' }),
-    images: z
-      .array(z.string(), { required_error: 'Images are required' })
-      .min(1, { message: 'At least one image is required' }),
+    shortDescription: z.string({
+      required_error: 'Short Description is required',
+    }),
+    longDescription: z.string({
+      required_error: 'Long Description is required',
+    }),
+    // images: z
+    //   .array(z.string(), { required_error: 'Images are required' })
+    //   .min(1, { message: 'At least one image is required' }),
     category: z.enum(TCategoryTypes, {
       required_error: 'Category is required',
     }),
@@ -25,13 +30,16 @@ const updateProductValidationSchema = z.object({
     stockQuantity: z
       .number({ required_error: 'Stock quantity is required' })
       .optional(),
-    description: z
-      .string({ required_error: 'Description is required' })
+    shortDescription: z
+      .string({ required_error: 'Short Description is required' })
       .optional(),
-    images: z
-      .array(z.string(), { required_error: 'Images are required' })
-      .min(1, { message: 'At least one image is required' })
+    longDescription: z
+      .string({ required_error: 'Long Description is required' })
       .optional(),
+    // images: z
+    //   .array(z.string(), { required_error: 'Images are required' })
+    //   .min(1, { message: 'At least one image is required' })
+    //   .optional(),
     category: z
       .enum(TCategoryTypes, {
         required_error: 'Category is required',

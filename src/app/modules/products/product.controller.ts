@@ -4,7 +4,13 @@ import sendResponse from '../../utils/sendResponse'
 import { ProductServices } from './product.service'
 
 const createProduct = catchAsync(async (req, res) => {
-  const result = await ProductServices.createProductIntoDB(req.body)
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] } // Type the files object properly
+
+  // Extract the 'images' field which contains multiple files
+  const imageFiles = files?.images || []
+
+  const result = await ProductServices.createProductIntoDB(imageFiles, req.body)
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

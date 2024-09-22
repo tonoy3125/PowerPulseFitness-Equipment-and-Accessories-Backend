@@ -1,12 +1,27 @@
 import { z } from 'zod'
 import { TCategoryTypes } from './product.constant'
 
+const numberFromString = (val) => {
+  const parsed = parseFloat(val)
+  return isNaN(parsed) ? undefined : parsed // Return undefined for invalid numbers
+}
+
 const createProductValidationSchema = z.object({
   body: z.object({
     name: z.string({ required_error: 'Name is required' }),
-    price: z.number({ required_error: 'Price is required' }),
+    price: z
+      .union([z.number(), z.string()]) // Allow both number and string
+      .transform(numberFromString) // Transform string to number
+      .refine((val) => val !== undefined, {
+        message: 'Price must be a valid number',
+      }),
     sku: z.string({ required_error: 'Sku is required' }),
-    stockQuantity: z.number({ required_error: 'Stock quantity is required' }),
+    stockQuantity: z
+      .union([z.number(), z.string()]) // Allow both number and string
+      .transform(numberFromString) // Transform string to number
+      .refine((val) => val !== undefined, {
+        message: 'Stock quantity must be a valid number',
+      }),
     shortDescription: z.string({
       required_error: 'Short Description is required',
     }),

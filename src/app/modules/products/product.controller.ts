@@ -8,6 +8,7 @@ const createProduct = catchAsync(async (req, res) => {
 
   // Extract the 'images' field which contains multiple files
   const imageFiles = files?.images || []
+  console.log(imageFiles)
 
   const result = await ProductServices.createProductIntoDB(imageFiles, req.body)
 

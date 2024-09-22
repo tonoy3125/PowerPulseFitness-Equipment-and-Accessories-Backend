@@ -127,11 +127,7 @@ const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
 }
 
 const deleteProductFromDB = async (id: string) => {
-  const result = await Product.findByIdAndUpdate(
-    id,
-    { isDeleted: true },
-    { new: true },
-  )
+  const result = await Product.findByIdAndDelete(id)
   return result
 }
 

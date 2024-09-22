@@ -115,11 +115,34 @@ const getProductByIdInCategory = async (category, id) => {
   return product
 }
 
-const updateProductIntoDB = async (id: string, payload: Partial<TProduct>) => {
+const updateProductIntoDB = async (
+  id: string,
+  payload: Partial<TProduct>,
+  files: Express.Multer.File[],
+) => {
   const product = await Product.findById(id)
 
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Service Not Found by this id')
+  }
+  if (files && files.length > 0) {
+    const imageNamePrefix = `${payload?.name}-${payload?.category}`
+    console.log(imageNamePrefix)
+
+    // Upload each new image to Cloudinary
+    const uploadedImages = await Promise.all(
+      files.map(async (file, index) => {
+        const imageName = `${imageNamePrefix}-${index + 1}`
+        const path = file.path
+
+        // Upload to Cloudinary
+        const { secure_url } = await sendImageToCloudinary(imageName, path)
+        return secure_url as string
+      }),
+    )
+
+    // Update images in the payload
+    payload.images = [...(product.images || []), ...uploadedImages]
   }
 
   const result = await Product.findByIdAndUpdate(id, payload, { new: true })

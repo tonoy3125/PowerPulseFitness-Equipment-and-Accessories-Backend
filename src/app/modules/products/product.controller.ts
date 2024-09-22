@@ -71,7 +71,15 @@ const getSingleProductInCategory = catchAsync(async (req, res) => {
 
 const updateProduct = catchAsync(async (req, res) => {
   const { id } = req.params
-  const result = await ProductServices.updateProductIntoDB(id, req.body)
+  const files = req.files as { [fieldname: string]: Express.Multer.File[] }
+
+  // Extract the 'images' field if files are present
+  const imageFiles = files?.images || []
+  const result = await ProductServices.updateProductIntoDB(
+    id,
+    req.body,
+    imageFiles,
+  )
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

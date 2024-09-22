@@ -31,6 +31,13 @@ router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
 router.put(
   '/:id',
   auth(USER_ROLE.admin),
+  upload, // Multer middleware for file upload
+  (req: Request, res: Response, next: NextFunction) => {
+    // Parse form-data body sent as JSON
+    req.body = JSON.parse(req?.body?.data)
+    console.log(req?.body)
+    next()
+  },
   validateRequest(ProductValidations.updateProductValidationSchema),
   ProductControllers.updateProduct,
 )

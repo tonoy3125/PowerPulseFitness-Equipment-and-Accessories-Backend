@@ -40,10 +40,20 @@ const createProductValidationSchema = z.object({
 const updateProductValidationSchema = z.object({
   body: z.object({
     name: z.string({ required_error: 'Name is required' }).optional(),
-    price: z.number({ required_error: 'Price is required' }).optional(),
+    price: z
+      .union([z.number(), z.string()]) // Allow both number and string
+      .transform(numberFromString) // Transform string to number
+      .refine((val) => val !== undefined, {
+        message: 'Price must be a valid number',
+      })
+      .optional(),
     sku: z.string({ required_error: 'Sku is required' }).optional(),
     stockQuantity: z
-      .number({ required_error: 'Stock quantity is required' })
+      .union([z.number(), z.string()]) // Allow both number and string
+      .transform(numberFromString) // Transform string to number
+      .refine((val) => val !== undefined, {
+        message: 'Stock quantity must be a valid number',
+      })
       .optional(),
     shortDescription: z
       .string({ required_error: 'Short Description is required' })

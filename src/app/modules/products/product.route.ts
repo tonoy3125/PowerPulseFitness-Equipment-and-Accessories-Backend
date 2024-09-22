@@ -33,8 +33,18 @@ router.put(
   auth(USER_ROLE.admin),
   upload, // Multer middleware for file upload
   (req: Request, res: Response, next: NextFunction) => {
-    // Parse form-data body sent as JSON
-    req.body = JSON.parse(req?.body?.data)
+    // Check if req.body.data exists before parsing
+    if (req?.body?.data) {
+      try {
+        req.body = JSON.parse(req?.body?.data)
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid JSON input in the 'data' field",
+          errorMessages: [{ path: '', message: 'Invalid JSON input' }],
+        })
+      }
+    }
     console.log(req?.body)
     next()
   },

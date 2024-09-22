@@ -6,6 +6,7 @@ import { Product } from './product.model'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { productSearchableField } from './product.constant'
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
+import { v4 as uuidv4 } from 'uuid'
 
 const createProductIntoDB = async (
   files: Express.Multer.File[],
@@ -125,11 +126,19 @@ const updateProductIntoDB = async (
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Service Not Found by this id')
   }
+  // Only upload images if files are provided
   if (files && files.length > 0) {
-    const imageNamePrefix = `${payload?.name}-${payload?.category}`
-    console.log(imageNamePrefix)
+    let imageNamePrefix: string
 
-    // Upload each new image to Cloudinary
+    // Check if both payload.name and payload.category exist
+    if (payload?.name && payload?.category) {
+      imageNamePrefix = `${payload.name}-${payload.category}`
+    } else {
+      // Generate a random image name prefix if name and category are not provided
+      imageNamePrefix = `product-${uuidv4()}`
+    }
+
+    // Upload each new image with the appropriate name prefix
     const uploadedImages = await Promise.all(
       files.map(async (file, index) => {
         const imageName = `${imageNamePrefix}-${index + 1}`
@@ -141,7 +150,7 @@ const updateProductIntoDB = async (
       }),
     )
 
-    // Update images in the payload
+    // Add new images to the existing ones
     payload.images = [...(product.images || []), ...uploadedImages]
   }
 

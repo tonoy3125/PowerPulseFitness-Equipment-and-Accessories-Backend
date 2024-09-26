@@ -22,6 +22,6 @@ const createCheckoutValidationSchema = z.object({
   }),
 })
 
-export const AddToCardValidations = {
+export const CheckoutValidations = {
   createCheckoutValidationSchema,
 }

@@ -23,11 +23,11 @@ const CheckoutSchema = new Schema<TCheckout>(
     },
     companyName: {
       type: String,
-      required: true,
+      required: false,
     },
     countryName: {
       type: String,
-      required: false,
+      required: true,
     },
     streetAddress: {
       type: String,

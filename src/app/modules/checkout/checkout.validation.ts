@@ -5,8 +5,16 @@ const createCheckoutValidationSchema = z.object({
   body: z.object({
     addToCartProduct: z
       .array(
-        z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
-          message: 'Each item must be a valid ObjectId',
+        z.object({
+          productId: z
+            .string()
+            .refine((id) => mongoose.Types.ObjectId.isValid(id), {
+              message: 'Each productId must be a valid ObjectId',
+            }),
+          quantity: z
+            .number()
+            .min(1, { message: 'Quantity must be at least 1' })
+            .optional(), // You can make it optional or required based on your needs
         }),
       )
       .nonempty({ message: 'Add To Cart is required' }),

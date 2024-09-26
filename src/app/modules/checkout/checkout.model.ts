@@ -5,9 +5,16 @@ const CheckoutSchema = new Schema<TCheckout>(
   {
     addToCartProduct: [
       {
-        type: Schema.Types.ObjectId,
-        ref: 'Product',
-        required: true,
+        productId: {
+          type: Schema.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+          min: 1, // Ensuring quantity is at least 1
+        },
       },
     ],
     userId: {

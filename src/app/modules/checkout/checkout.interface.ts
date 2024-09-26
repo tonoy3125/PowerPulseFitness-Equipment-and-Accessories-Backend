@@ -1,7 +1,7 @@
 import { Types } from 'mongoose'
 
 export type TCheckout = {
-  addToCartProduct: Types.ObjectId
+  addToCartProduct: { productId: Types.ObjectId; quantity: number }[]
   userId: Types.ObjectId
   firstName: string
   lastName: string

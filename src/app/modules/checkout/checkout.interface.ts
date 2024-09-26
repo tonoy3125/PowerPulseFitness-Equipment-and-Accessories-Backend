@@ -18,5 +18,6 @@ export type TCheckout = {
   tax: number
   shipping: number
   total: number
+  orderNumber?: string
   isDeleted: boolean
 }

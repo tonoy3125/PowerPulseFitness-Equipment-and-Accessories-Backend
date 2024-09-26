@@ -14,7 +14,7 @@ const createCheckoutValidationSchema = z.object({
           quantity: z
             .number()
             .min(1, { message: 'Quantity must be at least 1' })
-            .optional(), // You can make it optional or required based on your needs
+            .optional(),
         }),
       )
       .nonempty({ message: 'Add To Cart is required' }),

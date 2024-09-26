@@ -82,6 +82,9 @@ const CheckoutSchema = new Schema<TCheckout>(
       type: Number,
       required: true,
     },
+    orderNumber: {
+      type: String,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

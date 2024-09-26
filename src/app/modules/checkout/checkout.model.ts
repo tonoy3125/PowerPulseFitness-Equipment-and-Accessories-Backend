@@ -82,6 +82,11 @@ const CheckoutSchema = new Schema<TCheckout>(
       type: Number,
       required: true,
     },
+    status: {
+      type: String,
+      enum: ['Pending', 'Shipped', 'Delivered'],
+      default: 'Pending',
+    },
     orderNumber: {
       type: String,
     },

@@ -12,4 +12,6 @@ router.post(
   CheckoutControllers.createCheckOut,
 )
 
+router.get('/:id', CheckoutControllers.getSingleCheckoutByOrderId)
+
 export const CheckoutRoutes = router

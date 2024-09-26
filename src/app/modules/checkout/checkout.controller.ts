@@ -14,6 +14,18 @@ const createCheckOut = catchAsync(async (req, res) => {
   })
 })
 
+const getSingleCheckoutByOrderId = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await CheckoutServices.getSingleCheckoutByOrderIdFromDB(id)
+  sendResponse(res, {
+    success: result ? true : false,
+    statusCode: result ? httpStatus.OK : httpStatus.NOT_FOUND,
+    message: result ? 'Order retrieved successfully' : 'No Data Found',
+    data: result ? result : [],
+  })
+})
+
 export const CheckoutControllers = {
   createCheckOut,
+  getSingleCheckoutByOrderId,
 }

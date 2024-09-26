@@ -18,13 +18,11 @@ const createCheckoutIntoDB = async (payload: TCheckout) => {
 
     // Generate the order number before creating the checkout entry
     const orderNumber = generateOrderNumber()
-    console.log(orderNumber)
 
     // Create the checkout in the DB with the generated order number
-    const result = await Checkout.create(
-      [{ ...payload, orderNumber }], // Add the order number here
-      { session },
-    )
+    const result = await Checkout.create([{ ...payload, orderNumber }], {
+      session,
+    })
     console.log('Checkout created with order number:', result)
 
     // Deduct stock from products
@@ -36,7 +34,7 @@ const createCheckoutIntoDB = async (payload: TCheckout) => {
 
     // Commit the transaction
     await session.commitTransaction()
-    return result[0] // Return the created checkout entry
+    return result[0]
   } catch (error) {
     if (session) await session.abortTransaction()
     console.error('Transaction aborted due to error:', error)
@@ -61,6 +59,12 @@ const deductStockFromProducts = async (
   console.log('Bulk write result:', result)
 }
 
+const getSingleCheckoutByOrderIdFromDB = async (id: string) => {
+  const result = await Checkout.findById(id)
+  return result
+}
+
 export const CheckoutServices = {
   createCheckoutIntoDB,
+  getSingleCheckoutByOrderIdFromDB,
 }

@@ -19,5 +19,6 @@ export type TCheckout = {
   shipping: number
   total: number
   orderNumber?: string
+  status: 'Pending' | 'Shipped' | 'Delivered'
   isDeleted: boolean
 }

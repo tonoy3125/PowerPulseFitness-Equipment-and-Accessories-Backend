@@ -3,11 +3,13 @@ import { TCheckout } from './checkout.interface'
 
 const CheckoutSchema = new Schema<TCheckout>(
   {
-    addToCart: {
-      type: Schema.Types.ObjectId,
-      ref: 'AddToCart',
-      required: true,
-    },
+    addToCartProduct: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+        required: true,
+      },
+    ],
     userId: {
       type: Schema.Types.ObjectId,
       ref: 'User',

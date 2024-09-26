@@ -1,8 +1,15 @@
+import mongoose from 'mongoose'
 import { z } from 'zod'
 
 const createCheckoutValidationSchema = z.object({
   body: z.object({
-    addToCart: z.string({ required_error: 'Add To Cart is required' }),
+    addToCartProduct: z
+      .array(
+        z.string().refine((id) => mongoose.Types.ObjectId.isValid(id), {
+          message: 'Each item must be a valid ObjectId',
+        }),
+      )
+      .nonempty({ message: 'Add To Cart is required' }),
     userId: z.string({ required_error: 'User ID is required' }),
     firstName: z.string({ required_error: 'First Name is required' }),
     lastName: z.string({ required_error: 'Last Name is required' }),

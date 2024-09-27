@@ -60,7 +60,9 @@ const deductStockFromProducts = async (
 }
 
 const getSingleCheckoutByOrderIdFromDB = async (id: string) => {
-  const result = await Checkout.findById(id)
+  const result = await Checkout.findById(id).populate(
+    'addToCartProduct.productId',
+  )
   return result
 }
 

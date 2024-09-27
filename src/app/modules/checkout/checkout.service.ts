@@ -2,6 +2,7 @@ import { Types } from 'mongoose'
 import { TCheckout } from './checkout.interface'
 import { Checkout } from './checkout.model'
 import { Product } from '../products/product.model'
+import { AddToCart } from '../addToCart/addToCart.model'
 
 // Function to generate a unique 5-digit order number
 const generateOrderNumber = () => {
@@ -34,6 +35,11 @@ const createCheckoutIntoDB = async (payload: TCheckout) => {
 
     // Commit the transaction
     await session.commitTransaction()
+
+    // Remove all cart items for the user after placing the order
+    await removeUserCart(payload.userId)
+    console.log('User cart cleared after placing the order:', payload.userId)
+
     return result[0]
   } catch (error) {
     if (session) await session.abortTransaction()
@@ -57,6 +63,12 @@ const deductStockFromProducts = async (
 
   const result = await Product.bulkWrite(bulkOps, { session })
   console.log('Bulk write result:', result)
+}
+
+// Function to remove all cart items for a user
+const removeUserCart = async (userId: Types.ObjectId) => {
+  const result = await AddToCart.deleteMany({ userId }) // Remove all cart items for the user
+  console.log('Cart cleared for user:', userId, result)
 }
 
 const getSingleCheckoutByOrderIdFromDB = async (id: string) => {

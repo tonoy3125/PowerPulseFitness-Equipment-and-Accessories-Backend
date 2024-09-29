@@ -177,6 +177,14 @@ const updateDiscountIntoDB = async (sku: string, percentage: number) => {
   return product
 }
 
+const getDiscountedProductsFromDB = async () => {
+  const result = await Product.find({
+    discountPercentage: { $gt: 0 }, // Find products where discountPercentage is greater than 0
+  }).sort({ discountPercentage: -1 }) // Sort by discount in descending order
+
+  return result
+}
+
 const deleteProductFromDB = async (id: string) => {
   const result = await Product.findByIdAndDelete(id)
   return result
@@ -190,5 +198,6 @@ export const ProductServices = {
   getProductByIdInCategory,
   updateProductIntoDB,
   updateDiscountIntoDB,
+  getDiscountedProductsFromDB,
   deleteProductFromDB,
 }

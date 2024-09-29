@@ -100,6 +100,20 @@ const updateDiscount = catchAsync(async (req, res) => {
   })
 })
 
+const getDiscountedProducts = catchAsync(async (req, res) => {
+  const result = await ProductServices.getDiscountedProductsFromDB()
+
+  sendResponse(res, {
+    success: result.length > 0 ? true : false,
+    statusCode: result.length > 0 ? httpStatus.OK : httpStatus.NOT_FOUND,
+    message:
+      result.length > 0
+        ? 'Discounted products retrieved successfully'
+        : 'No discounted products found',
+    data: result,
+  })
+})
+
 const deleteProduct = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await ProductServices.deleteProductFromDB(id)
@@ -119,5 +133,6 @@ export const ProductControllers = {
   getSingleProductInCategory,
   updateProduct,
   updateDiscount,
+  getDiscountedProducts,
   deleteProduct,
 }

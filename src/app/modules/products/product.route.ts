@@ -24,8 +24,12 @@ router.post(
 
 router.get('/', ProductControllers.getAllProduct)
 
+router.get('/discounts', ProductControllers.getDiscountedProducts)
+
 router.get('/:id', ProductControllers.getSingleProduct)
+
 router.get('/category/:category', ProductControllers.getSingleCategory)
+
 router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
 
 router.put(
@@ -55,7 +59,7 @@ router.put(
 router.patch(
   '/discount',
   auth(USER_ROLE.admin), // Ensure only admin can update discounts
-  // validateRequest(ProductValidations.updateDiscountValidationSchema), 
+  // validateRequest(ProductValidations.updateDiscountValidationSchema),
   ProductControllers.updateDiscount, // Call the controller function
 )
 

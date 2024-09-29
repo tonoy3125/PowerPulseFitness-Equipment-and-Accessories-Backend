@@ -130,6 +130,18 @@ const getDiscountedProducts = catchAsync(async (req, res) => {
   })
 })
 
+const removeDiscountById = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await ProductServices.removeDiscountByIdFromDB(id)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Discount removed successfully!',
+    data: result,
+  })
+})
+
 const deleteProduct = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await ProductServices.deleteProductFromDB(id)
@@ -151,5 +163,6 @@ export const ProductControllers = {
   updateDiscount,
   removeExpiredDiscounts,
   getDiscountedProducts,
+  removeDiscountById,
   deleteProduct,
 }

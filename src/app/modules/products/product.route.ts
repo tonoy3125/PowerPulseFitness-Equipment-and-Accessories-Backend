@@ -69,6 +69,8 @@ router.post(
   ProductControllers.removeExpiredDiscounts, // Controller function to remove expired discounts
 )
 
+router.patch('/remove-discount/:id', ProductControllers.removeDiscountById)
+
 router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 
 export const ProductRoutes = router

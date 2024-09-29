@@ -162,9 +162,10 @@ const updateDiscountIntoDB = async (
   sku: string,
   percentage: number,
   duration: number,
-  durationUnit: 'minutes' | 'hours' | 'days' = 'hours', // Default to hours
+  durationUnit: 'Minutes' | 'Hours' | 'Days' = 'Hours', // Default to hours
 ) => {
   const product = await Product.findOne({ sku })
+  console.log(product)
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
   }
@@ -186,9 +187,9 @@ const updateDiscountIntoDB = async (
   const durationInMillis =
     duration *
     {
-      minutes: 60 * 1000,
-      hours: 60 * 60 * 1000,
-      days: 24 * 60 * 60 * 1000,
+      Minutes: 60 * 1000,
+      Hours: 60 * 60 * 1000,
+      Days: 24 * 60 * 60 * 1000,
     }[durationUnit]
 
   const discountEndTime = new Date(Date.now() + durationInMillis)
@@ -235,6 +236,25 @@ const getDiscountedProductsFromDB = async () => {
   return result
 }
 
+const removeDiscountByIdFromDB = async (id: string) => {
+  const product = await Product.findById(id)
+
+  if (!product) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
+  }
+
+  // Reset discount-related fields
+  product.discountPrice = 0
+  product.discountPercentage = 0
+  product.discountStartTime = undefined
+  product.discountEndTime = undefined
+  product.discountDuration = undefined
+
+  await product.save()
+
+  return product
+}
+
 const deleteProductFromDB = async (id: string) => {
   const result = await Product.findByIdAndDelete(id)
   return result
@@ -250,5 +270,6 @@ export const ProductServices = {
   updateDiscountIntoDB,
   checkAndRemoveExpiredDiscounts,
   getDiscountedProductsFromDB,
+  removeDiscountByIdFromDB,
   deleteProductFromDB,
 }

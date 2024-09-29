@@ -63,6 +63,12 @@ router.patch(
   ProductControllers.updateDiscount, // Call the controller function
 )
 
+router.post(
+  '/discounts/remove-expired',
+  auth(USER_ROLE.admin), // Ensure only admin can trigger this operation
+  ProductControllers.removeExpiredDiscounts, // Controller function to remove expired discounts
+)
+
 router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 
 export const ProductRoutes = router

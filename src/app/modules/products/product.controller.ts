@@ -89,13 +89,29 @@ const updateProduct = catchAsync(async (req, res) => {
 })
 
 const updateDiscount = catchAsync(async (req, res) => {
-  const { sku, percentage } = req.body // Assume the body contains sku and percentage
-  const result = await ProductServices.updateDiscountIntoDB(sku, percentage)
+  const { sku, percentage, duration, durationUnit } = req.body // Include durationUnit
+  const result = await ProductServices.updateDiscountIntoDB(
+    sku,
+    percentage,
+    duration,
+    durationUnit,
+  )
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Discount updated successfully!',
+    data: result,
+  })
+})
+
+const removeExpiredDiscounts = catchAsync(async (req, res) => {
+  const result = await ProductServices.checkAndRemoveExpiredDiscounts()
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Expired discounts checked and removed!!',
     data: result,
   })
 })
@@ -133,6 +149,7 @@ export const ProductControllers = {
   getSingleProductInCategory,
   updateProduct,
   updateDiscount,
+  removeExpiredDiscounts,
   getDiscountedProducts,
   deleteProduct,
 }

@@ -29,5 +29,8 @@ export type TProduct = {
   stockAvailability?: string
   discountPrice?: number
   discountPercentage?: number
+  discountStartTime?: Date
+  discountEndTime?: Date
+  discountDuration?: number
   isDeleted: boolean
 }

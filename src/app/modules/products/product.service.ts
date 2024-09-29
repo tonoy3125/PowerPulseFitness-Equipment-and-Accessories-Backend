@@ -158,23 +158,73 @@ const updateProductIntoDB = async (
   return result
 }
 
-const updateDiscountIntoDB = async (sku: string, percentage: number) => {
-  // Find the product by SKU
+const updateDiscountIntoDB = async (
+  sku: string,
+  percentage: number,
+  duration: number,
+  durationUnit: 'minutes' | 'hours' | 'days' = 'hours', // Default to hours
+) => {
   const product = await Product.findOne({ sku })
   if (!product) {
     throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
   }
 
-  // Calculate the discount price
+  // Ensure percentage and duration are valid
+  if (percentage <= 0 || percentage > 100) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid discount percentage')
+  }
+
+  if (duration <= 0) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Invalid discount duration')
+  }
+
+  // Calculate discount price
   const discountAmount = (product.price * percentage) / 100
   const discountPrice = product.price - discountAmount
 
-  // Update the product with the new discount price
+  // Calculate discount end time based on the unit
+  const durationInMillis =
+    duration *
+    {
+      minutes: 60 * 1000,
+      hours: 60 * 60 * 1000,
+      days: 24 * 60 * 60 * 1000,
+    }[durationUnit]
+
+  const discountEndTime = new Date(Date.now() + durationInMillis)
+
+  // Update product with discount info
   product.discountPrice = discountPrice
   product.discountPercentage = percentage
+  product.discountStartTime = new Date() // current time
+  product.discountEndTime = discountEndTime // set the calculated end time
+  product.discountDuration = duration // duration in minutes, hours, or days
   await product.save()
 
   return product
+}
+
+const checkAndRemoveExpiredDiscounts = async () => {
+  const now = new Date()
+
+  // Find products where discount is active and not expired
+  const products = await Product.find({
+    discountPercentage: { $gt: 0 },
+    discountStartTime: { $exists: true },
+    discountEndTime: { $exists: true }, // Use discountEndTime
+  })
+
+  for (const product of products) {
+    // If discount is expired, reset discount info
+    if (now >= product.discountEndTime) {
+      product.discountPrice = 0
+      product.discountPercentage = 0
+      product.discountStartTime = undefined
+      product.discountEndTime = undefined // Reset end time
+      product.discountDuration = undefined // Reset duration
+      await product.save()
+    }
+  }
 }
 
 const getDiscountedProductsFromDB = async () => {
@@ -198,6 +248,7 @@ export const ProductServices = {
   getProductByIdInCategory,
   updateProductIntoDB,
   updateDiscountIntoDB,
+  checkAndRemoveExpiredDiscounts,
   getDiscountedProductsFromDB,
   deleteProductFromDB,
 }

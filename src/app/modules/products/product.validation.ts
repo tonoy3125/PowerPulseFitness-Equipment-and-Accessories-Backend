@@ -73,7 +73,18 @@ const updateProductValidationSchema = z.object({
   }),
 })
 
+const updateDiscountValidationSchema = z.object({
+  body: z.object({
+    sku: z.string().min(1, 'SKU is required'),
+    percentage: z
+      .number()
+      .min(0)
+      .max(100, 'Percentage must be between 0 and 100'),
+  }),
+})
+
 export const ProductValidations = {
   createProductValidationSchema,
   updateProductValidationSchema,
+  updateDiscountValidationSchema,
 }

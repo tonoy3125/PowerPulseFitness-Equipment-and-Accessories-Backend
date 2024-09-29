@@ -158,6 +158,25 @@ const updateProductIntoDB = async (
   return result
 }
 
+const updateDiscountIntoDB = async (sku: string, percentage: number) => {
+  // Find the product by SKU
+  const product = await Product.findOne({ sku })
+  if (!product) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
+  }
+
+  // Calculate the discount price
+  const discountAmount = (product.price * percentage) / 100
+  const discountPrice = product.price - discountAmount
+
+  // Update the product with the new discount price
+  product.discountPrice = discountPrice
+  product.discountPercentage = percentage
+  await product.save()
+
+  return product
+}
+
 const deleteProductFromDB = async (id: string) => {
   const result = await Product.findByIdAndDelete(id)
   return result
@@ -170,5 +189,6 @@ export const ProductServices = {
   getProductsByCategoryFromDB,
   getProductByIdInCategory,
   updateProductIntoDB,
+  updateDiscountIntoDB,
   deleteProductFromDB,
 }

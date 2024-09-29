@@ -88,6 +88,18 @@ const updateProduct = catchAsync(async (req, res) => {
   })
 })
 
+const updateDiscount = catchAsync(async (req, res) => {
+  const { sku, percentage } = req.body // Assume the body contains sku and percentage
+  const result = await ProductServices.updateDiscountIntoDB(sku, percentage)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Discount updated successfully!',
+    data: result,
+  })
+})
+
 const deleteProduct = catchAsync(async (req, res) => {
   const { id } = req.params
   const result = await ProductServices.deleteProductFromDB(id)
@@ -106,5 +118,6 @@ export const ProductControllers = {
   getSingleCategory,
   getSingleProductInCategory,
   updateProduct,
+  updateDiscount,
   deleteProduct,
 }

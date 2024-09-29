@@ -52,6 +52,13 @@ router.put(
   ProductControllers.updateProduct,
 )
 
+router.patch(
+  '/discount',
+  auth(USER_ROLE.admin), // Ensure only admin can update discounts
+  // validateRequest(ProductValidations.updateDiscountValidationSchema), 
+  ProductControllers.updateDiscount, // Call the controller function
+)
+
 router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 
 export const ProductRoutes = router

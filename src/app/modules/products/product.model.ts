@@ -24,11 +24,11 @@ const ProductSchema = new Schema<TProduct>(
     },
     shortDescription: {
       type: String,
-      required: true,
+      required: false,
     },
     longDescription: {
       type: String,
-      required: true,
+      required: false,
     },
     images: {
       type: [String],
@@ -38,6 +38,14 @@ const ProductSchema = new Schema<TProduct>(
       type: String,
       enum: TCategoryTypes,
       required: true,
+    },
+    discountPrice: {
+      type: Number,
+      default: 0,
+    },
+    discountPercentage: {
+      type: Number,
+      default: 0,
     },
     isDeleted: {
       type: Boolean,

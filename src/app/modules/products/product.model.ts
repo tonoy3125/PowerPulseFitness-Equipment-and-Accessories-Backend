@@ -1,6 +1,6 @@
 import { model, Schema } from 'mongoose'
 import { TProduct } from './product.interface'
-import { TCategoryTypes } from './product.constant'
+import { TCategoryTypes, TDiscountDurationUnitTypes } from './product.constant'
 
 const ProductSchema = new Schema<TProduct>(
   {
@@ -55,6 +55,10 @@ const ProductSchema = new Schema<TProduct>(
     },
     discountDuration: {
       type: Number,
+    },
+    discountDurationUnit: {
+      type: String,
+      enum: TDiscountDurationUnitTypes,
     },
     advertise: {
       type: Boolean,

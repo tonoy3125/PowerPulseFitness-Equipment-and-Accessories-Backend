@@ -18,4 +18,6 @@ export const TCategoryTypes = [
   'New Arrival',
 ] as const
 
+export const TDiscountDurationUnitTypes = ['Minutes', 'Hours', 'Days'] as const
+
 export const productSearchableField = ['name']

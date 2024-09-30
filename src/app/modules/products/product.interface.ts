@@ -17,6 +17,8 @@ export type TCategory =
   | 'FLOORING'
   | 'New Arrival'
 
+export type TDiscountDurationUnit = 'Minutes' | 'Hours' | 'Days'
+
 export type TProduct = {
   name: string
   price: number
@@ -32,6 +34,7 @@ export type TProduct = {
   discountStartTime?: Date
   discountEndTime?: Date
   discountDuration?: number
+  discountDurationUnit?: TDiscountDurationUnit
   advertise?: boolean
   isDeleted: boolean
 }

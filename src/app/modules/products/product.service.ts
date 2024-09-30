@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
-import { TProduct } from './product.interface'
+import { TDiscountDurationUnit, TProduct } from './product.interface'
 import { Product } from './product.model'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { productSearchableField } from './product.constant'
@@ -162,7 +162,7 @@ const updateDiscountIntoDB = async (
   sku: string,
   percentage: number,
   duration: number,
-  durationUnit: 'Minutes' | 'Hours' | 'Days' = 'Hours', // Default to hours
+  durationUnit: TDiscountDurationUnit, // Default to hours
 ) => {
   const product = await Product.findOne({ sku })
   console.log(product)
@@ -200,6 +200,7 @@ const updateDiscountIntoDB = async (
   product.discountStartTime = new Date() // current time
   product.discountEndTime = discountEndTime // set the calculated end time
   product.discountDuration = duration // duration in minutes, hours, or days
+  product.discountDurationUnit = durationUnit
   await product.save()
 
   return product
@@ -223,6 +224,7 @@ const checkAndRemoveExpiredDiscounts = async () => {
       product.discountStartTime = undefined
       product.discountEndTime = undefined // Reset end time
       product.discountDuration = undefined // Reset duration
+      product.discountDurationUnit = undefined // Reset duration unit
       product.advertise = false
       await product.save()
     }
@@ -250,6 +252,7 @@ const removeDiscountByIdFromDB = async (id: string) => {
   product.discountStartTime = undefined
   product.discountEndTime = undefined
   product.discountDuration = undefined
+  product.discountDurationUnit = undefined
   product.advertise = false
 
   await product.save()

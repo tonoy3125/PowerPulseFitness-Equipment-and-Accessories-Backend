@@ -223,6 +223,7 @@ const checkAndRemoveExpiredDiscounts = async () => {
       product.discountStartTime = undefined
       product.discountEndTime = undefined // Reset end time
       product.discountDuration = undefined // Reset duration
+      product.advertise = false
       await product.save()
     }
   }
@@ -249,6 +250,7 @@ const removeDiscountByIdFromDB = async (id: string) => {
   product.discountStartTime = undefined
   product.discountEndTime = undefined
   product.discountDuration = undefined
+  product.advertise = false
 
   await product.save()
 

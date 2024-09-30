@@ -153,6 +153,18 @@ const deleteProduct = catchAsync(async (req, res) => {
   })
 })
 
+const addAdvertiseDiscountById = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await ProductServices.addAdvertiseDiscountProduct(id)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Advertise Added successfully!',
+    data: result,
+  })
+})
+
 export const ProductControllers = {
   createProduct,
   getAllProduct,
@@ -165,4 +177,5 @@ export const ProductControllers = {
   getDiscountedProducts,
   removeDiscountById,
   deleteProduct,
+  addAdvertiseDiscountById,
 }

@@ -56,6 +56,9 @@ const ProductSchema = new Schema<TProduct>(
     discountDuration: {
       type: Number,
     },
+    advertise: {
+      type: Boolean,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

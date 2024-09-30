@@ -181,7 +181,7 @@ const updateDiscountIntoDB = async (
 
   // Calculate discount price
   const discountAmount = (product.price * percentage) / 100
-  const discountPrice = product.price - discountAmount
+  const discountPrice = parseFloat((product.price - discountAmount).toFixed(2))
 
   // Calculate discount end time based on the unit
   const durationInMillis =
@@ -260,6 +260,27 @@ const deleteProductFromDB = async (id: string) => {
   return result
 }
 
+const addAdvertiseDiscountProduct = async (id: string) => {
+  const product = await Product.findById(id)
+
+  if (!product) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
+  }
+
+  if (product.discountPercentage <= 0) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'Product must have a discount to be advertised',
+    )
+  }
+
+  // Update the product to set advertise to true
+  product.advertise = true
+  await product.save()
+
+  return product
+}
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductFromDB,
@@ -272,4 +293,5 @@ export const ProductServices = {
   getDiscountedProductsFromDB,
   removeDiscountByIdFromDB,
   deleteProductFromDB,
+  addAdvertiseDiscountProduct,
 }

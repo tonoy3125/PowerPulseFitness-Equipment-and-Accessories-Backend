@@ -27,10 +27,11 @@ export type TProduct = {
   images: string[]
   category: TCategory
   stockAvailability?: string
-  discountPrice?: number
+  discountPrice?: number | undefined
   discountPercentage?: number
   discountStartTime?: Date
   discountEndTime?: Date
   discountDuration?: number
+  advertise?: boolean
   isDeleted: boolean
 }

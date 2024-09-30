@@ -73,4 +73,10 @@ router.patch('/remove-discount/:id', ProductControllers.removeDiscountById)
 
 router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 
+router.patch(
+  '/advertise/:id',
+  auth('admin'),
+  ProductControllers.addAdvertiseDiscountById,
+)
+
 export const ProductRoutes = router

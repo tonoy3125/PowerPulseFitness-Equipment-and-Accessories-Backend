@@ -281,6 +281,20 @@ const addAdvertiseDiscountProduct = async (id: string) => {
   return product
 }
 
+const removeAdvertiseDiscountProduct = async (id: string) => {
+  const product = await Product.findById(id)
+
+  if (!product) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
+  }
+
+  // Update the product to set advertise to false
+  product.advertise = false
+  await product.save()
+
+  return product
+}
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductFromDB,
@@ -294,4 +308,5 @@ export const ProductServices = {
   removeDiscountByIdFromDB,
   deleteProductFromDB,
   addAdvertiseDiscountProduct,
+  removeAdvertiseDiscountProduct,
 }

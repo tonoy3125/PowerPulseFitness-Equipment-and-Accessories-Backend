@@ -78,5 +78,10 @@ router.patch(
   auth('admin'),
   ProductControllers.addAdvertiseDiscountById,
 )
+router.patch(
+  '/remove-advertise/:id',
+  auth('admin'),
+  ProductControllers.removeAdvertiseDiscountById,
+)
 
 export const ProductRoutes = router

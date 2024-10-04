@@ -1,4 +1,3 @@
-import { TWishlist } from './wishlist.interface'
 import { Wishlist } from './wishlist.model'
 
 const addOrRemoveWishlistItem = async (userId: string, productId: string) => {

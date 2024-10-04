@@ -1,8 +1,8 @@
 import { z } from 'zod'
 import { TCategoryTypes } from './product.constant'
 
-const numberFromString = (val) => {
-  const parsed = parseFloat(val)
+const numberFromString = (val: string | number): number | undefined => {
+  const parsed = parseFloat(val as string)
   return isNaN(parsed) ? undefined : parsed // Return undefined for invalid numbers
 }
 

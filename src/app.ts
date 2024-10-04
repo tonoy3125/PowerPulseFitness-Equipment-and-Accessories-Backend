@@ -1,4 +1,4 @@
-import express, { Application, Request, Response } from 'express'
+import express, { Application } from 'express'
 import cors from 'cors'
 import cookieParser from 'cookie-parser'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
@@ -22,7 +22,6 @@ app.get('/', (req, res) => {
   })
 })
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 app.use(globalErrorHandler)
 
 // Not found

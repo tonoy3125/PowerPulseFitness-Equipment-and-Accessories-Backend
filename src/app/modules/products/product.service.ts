@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { TDiscountDurationUnit, TProduct } from './product.interface'
@@ -67,7 +66,7 @@ const getSingleProductFromDB = async (id: string) => {
   return result
 }
 
-const getProductsByCategoryFromDB = async (category) => {
+const getProductsByCategoryFromDB = async (category: string) => {
   // Aggregation pipeline
   const result = await Product.aggregate([
     {
@@ -108,7 +107,7 @@ const getProductsByCategoryFromDB = async (category) => {
   return result
 }
 
-const getProductByIdInCategory = async (category, id) => {
+const getProductByIdInCategory = async (category: string, id: string) => {
   const product = await Product.findOne({
     _id: id,
     category: { $regex: new RegExp(`^${category}$`, 'i') },
@@ -218,7 +217,7 @@ const checkAndRemoveExpiredDiscounts = async () => {
 
   for (const product of products) {
     // If discount is expired, reset discount info
-    if (now >= product.discountEndTime) {
+    if (product.discountEndTime && now >= product.discountEndTime) {
       product.discountPrice = 0
       product.discountPercentage = 0
       product.discountStartTime = undefined
@@ -272,7 +271,7 @@ const addAdvertiseDiscountProduct = async (id: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
   }
 
-  if (product.discountPercentage <= 0) {
+  if (product.discountPercentage == null || product.discountPercentage <= 0) {
     throw new AppError(
       httpStatus.BAD_REQUEST,
       'Product must have a discount to be advertised',
@@ -300,6 +299,11 @@ const removeAdvertiseDiscountProduct = async (id: string) => {
   return product
 }
 
+const getAdvertisedProductsFromDB = async () => {
+  const result = await Product.find({ advertise: true }).sort({ updatedAt: -1 })
+  return result
+}
+
 export const ProductServices = {
   createProductIntoDB,
   getAllProductFromDB,
@@ -314,4 +318,5 @@ export const ProductServices = {
   deleteProductFromDB,
   addAdvertiseDiscountProduct,
   removeAdvertiseDiscountProduct,
+  getAdvertisedProductsFromDB,
 }

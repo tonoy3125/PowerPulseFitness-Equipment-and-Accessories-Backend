@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import express, { NextFunction, Request, Response } from 'express'
 import validateRequest from '../../middlewares/validateRequest'
 import { ProductValidations } from './product.validation'
@@ -25,12 +26,14 @@ router.post(
 router.get('/', ProductControllers.getAllProduct)
 
 router.get('/discounts', ProductControllers.getDiscountedProducts)
+router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
 router.get('/:id', ProductControllers.getSingleProduct)
 
 router.get('/category/:category', ProductControllers.getSingleCategory)
 
 router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
+router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
 router.put(
   '/:id',
@@ -69,7 +72,11 @@ router.post(
   ProductControllers.removeExpiredDiscounts, // Controller function to remove expired discounts
 )
 
-router.patch('/remove-discount/:id', ProductControllers.removeDiscountById)
+router.patch(
+  '/remove-discount/:id',
+  auth('admin'),
+  ProductControllers.removeDiscountById,
+)
 
 router.delete('/:id', auth(USER_ROLE.admin), ProductControllers.deleteProduct)
 

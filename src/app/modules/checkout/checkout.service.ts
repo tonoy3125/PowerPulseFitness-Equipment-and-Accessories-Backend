@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Types } from 'mongoose'
 import { TCheckout } from './checkout.interface'
 import { Checkout } from './checkout.model'

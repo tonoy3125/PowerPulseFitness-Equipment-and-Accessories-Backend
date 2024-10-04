@@ -4,7 +4,7 @@ import sendResponse from '../../utils/sendResponse'
 import { AddToCartServices } from './addToCart.service'
 
 const createAddToCart = catchAsync(async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user!._id
   const { productId, quantity } = req.body
 
   const result = await AddToCartServices.createAddToCartItemIntoDB(
@@ -21,7 +21,7 @@ const createAddToCart = catchAsync(async (req, res) => {
 })
 
 const getUserCartItems = catchAsync(async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user!._id
 
   const cart = await AddToCartServices.getUserCartItemsFromDB(userId)
 
@@ -34,7 +34,7 @@ const getUserCartItems = catchAsync(async (req, res) => {
 })
 
 const increaseQuantity = catchAsync(async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user!._id
   const { productId } = req.body
 
   const result = await AddToCartServices.increaseCartItemQuantity(
@@ -51,7 +51,7 @@ const increaseQuantity = catchAsync(async (req, res) => {
 })
 
 const decreaseQuantity = catchAsync(async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user!._id
   const { productId } = req.body
 
   const result = await AddToCartServices.decreaseCartItemQuantity(
@@ -68,7 +68,7 @@ const decreaseQuantity = catchAsync(async (req, res) => {
 })
 
 const removeCartItem = catchAsync(async (req, res) => {
-  const userId = req.user._id
+  const userId = req.user!._id
   const { productId } = req.body
 
   const result = await AddToCartServices.removeCartItemIntoDB(userId, productId)

@@ -2,6 +2,7 @@ import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { Product } from '../products/product.model'
 import { AddToCart } from './addToCart.model'
+import { Types } from 'mongoose'
 
 const createAddToCartItemIntoDB = async (
   productId: string,
@@ -41,7 +42,7 @@ const createAddToCartItemIntoDB = async (
   } else {
     // If the product is not in the cart, add it as a new item
     cart.items.push({
-      productId,
+      productId: new Types.ObjectId(productId),
       quantity: Math.min(quantity, product.stockQuantity),
       isDeleted: false,
     })
@@ -139,6 +140,10 @@ const decreaseCartItemQuantity = async (userId: string, productId: string) => {
 const removeCartItemIntoDB = async (userId: string, productId: string) => {
   // Find the cart by userId
   const cart = await AddToCart.findOne({ userId })
+
+  if (!cart) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Cart Not Found')
+  }
 
   // Find the item in the cart by productId
   const existingCartItemIndex = cart.items.findIndex(

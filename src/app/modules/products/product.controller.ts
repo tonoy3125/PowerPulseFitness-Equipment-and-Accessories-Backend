@@ -27,7 +27,7 @@ const getAllProduct = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Product Created Successfully',
+    message: 'Products retrieved Successfully!',
     meta: result.meta,
     data: result.result,
   })
@@ -120,12 +120,9 @@ const getDiscountedProducts = catchAsync(async (req, res) => {
   const result = await ProductServices.getDiscountedProductsFromDB()
 
   sendResponse(res, {
-    success: result.length > 0 ? true : false,
-    statusCode: result.length > 0 ? httpStatus.OK : httpStatus.NOT_FOUND,
-    message:
-      result.length > 0
-        ? 'Discounted products retrieved successfully'
-        : 'No discounted products found',
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Discounted products retrieved successfully',
     data: result,
   })
 })
@@ -177,6 +174,17 @@ const removeAdvertiseDiscountById = catchAsync(async (req, res) => {
   })
 })
 
+const getAllAdvertiseDiscountProduct = catchAsync(async (req, res) => {
+  const result = await ProductServices.getAdvertisedProductsFromDB()
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Products retrieved Successfully!',
+    data: result,
+  })
+})
+
 export const ProductControllers = {
   createProduct,
   getAllProduct,
@@ -191,4 +199,5 @@ export const ProductControllers = {
   deleteProduct,
   addAdvertiseDiscountById,
   removeAdvertiseDiscountById,
+  getAllAdvertiseDiscountProduct,
 }

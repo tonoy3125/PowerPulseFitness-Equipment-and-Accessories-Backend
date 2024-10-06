@@ -4,27 +4,18 @@ import { TDiscountDurationUnit, TProduct } from './product.interface'
 import { Product } from './product.model'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { productSearchableField } from './product.constant'
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
-import { v4 as uuidv4 } from 'uuid'
+// import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary'
+// import { v4 as uuidv4 } from 'uuid'
 
 const createProductIntoDB = async (
   files: Express.Multer.File[],
   payload: TProduct,
 ) => {
   if (files && files.length > 0) {
-    const imageNamePrefix = `${payload?.name}-${payload?.category}`
-
-    // Upload each image to Cloudinary
-    const uploadedImages = await Promise.all(
-      files.map(async (file, index) => {
-        const imageName = `${imageNamePrefix}-${index + 1}`
-        const path = file.path
-
-        // Upload to Cloudinary
-        const { secure_url } = await sendImageToCloudinary(imageName, path)
-        return secure_url as string
-      }),
-    )
+    const uploadedImages = files.map((file) => {
+      // Each file has a Cloudinary `path` (secure_url) returned
+      return file.path
+    })
 
     // Add uploaded image URLs to the payload
     payload.images = [...(payload.images || []), ...uploadedImages]
@@ -123,38 +114,29 @@ const updateProductIntoDB = async (
   const product = await Product.findById(id)
 
   if (!product) {
-    throw new AppError(httpStatus.NOT_FOUND, 'Service Not Found by this id')
+    throw new AppError(httpStatus.NOT_FOUND, 'Product not found')
   }
-  // Only upload images if files are provided
+
+  // If there are new images to upload
   if (files && files.length > 0) {
-    let imageNamePrefix: string
+    const uploadedImages = files.map((file) => {
+      // Use the file path directly for local storage
+      return file.path
+    })
 
-    // Check if both payload.name and payload.category exist
-    if (payload?.name && payload?.category) {
-      imageNamePrefix = `${payload.name}-${payload.category}`
-    } else {
-      // Generate a random image name prefix if name and category are not provided
-      imageNamePrefix = `product-${uuidv4()}`
-    }
-
-    // Upload each new image with the appropriate name prefix
-    const uploadedImages = await Promise.all(
-      files.map(async (file, index) => {
-        const imageName = `${imageNamePrefix}-${index + 1}`
-        const path = file.path
-
-        // Upload to Cloudinary
-        const { secure_url } = await sendImageToCloudinary(imageName, path)
-        return secure_url as string
-      }),
-    )
-
-    // Add new images to the existing ones
+    // Append new images to the existing ones
     payload.images = [...(product.images || []), ...uploadedImages]
   }
 
-  const result = await Product.findByIdAndUpdate(id, payload, { new: true })
-  return result
+  // Update other fields if they exist in the payload
+  const updatedPayload = { ...payload }
+
+  const updatedProduct = await Product.findByIdAndUpdate(id, updatedPayload, {
+    new: true, // Return the updated product
+    runValidators: true, // Ensure that validation is applied
+  })
+
+  return updatedProduct
 }
 
 const updateDiscountIntoDB = async (

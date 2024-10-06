@@ -14,10 +14,13 @@ router.post(
   auth(USER_ROLE.admin),
   upload, // Multer middleware for file upload
   (req: Request, res: Response, next: NextFunction) => {
-    // Parse form-data body sent as JSON
-    req.body = JSON.parse(req?.body?.data)
-    console.log(req?.body)
-    next()
+    try {
+      // Parse form-data body sent as JSON
+      req.body = JSON.parse(req?.body?.data)
+      next()
+    } catch (error) {
+      next(error)
+    }
   },
   validateRequest(ProductValidations.createProductValidationSchema),
   ProductControllers.createProduct,

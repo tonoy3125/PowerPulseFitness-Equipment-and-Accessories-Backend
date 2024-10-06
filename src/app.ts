@@ -11,13 +11,21 @@ const app: Application = express()
 // parser
 app.use(express.json())
 app.use(cookieParser())
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }))
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      // 'https://power-pulse-fitness-equipment-and-accessories-frontend.vercel.app',
+    ],
+    credentials: true,
+  }),
+)
 
 // Application Routes
 app.use('/api', routes)
 
 app.get('/', (req, res) => {
-  res.json({
+  res.send({
     message: 'Wellcome to PowerPulse Fitness Backend',
   })
 })

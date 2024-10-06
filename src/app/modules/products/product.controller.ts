@@ -75,11 +75,13 @@ const updateProduct = catchAsync(async (req, res) => {
 
   // Extract the 'images' field if files are present
   const imageFiles = files?.images || []
+
   const result = await ProductServices.updateProductIntoDB(
     id,
     req.body,
-    imageFiles,
+    imageFiles, // Pass the image files correctly
   )
+
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

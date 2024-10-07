@@ -90,6 +90,9 @@ const CheckoutSchema = new Schema<TCheckout>(
     orderNumber: {
       type: String,
     },
+    deliveryProcess: {
+      type: String,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

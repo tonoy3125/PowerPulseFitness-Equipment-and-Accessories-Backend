@@ -32,7 +32,7 @@ const getAllOrder = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Products retrieved Successfully!',
+    message: 'All Order retrieved Successfully!',
     meta: result.meta,
     data: result.result,
   })
@@ -40,7 +40,7 @@ const getAllOrder = catchAsync(async (req, res) => {
 
 const getUserOrderItems = catchAsync(async (req, res) => {
   const userId = req.user!._id
-  console.log(userId)
+  // console.log(userId)
 
   const result = await CheckoutServices.getUserOrderItemsFromDB(userId)
 

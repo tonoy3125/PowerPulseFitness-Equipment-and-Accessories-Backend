@@ -38,8 +38,23 @@ const getAllOrder = catchAsync(async (req, res) => {
   })
 })
 
+const getUserOrderItems = catchAsync(async (req, res) => {
+  const userId = req.user!._id
+  console.log(userId)
+
+  const result = await CheckoutServices.getUserOrderItemsFromDB(userId)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User All Orders Retrieved Successfully',
+    data: result,
+  })
+})
+
 export const CheckoutControllers = {
   createCheckOut,
   getSingleCheckoutByOrderId,
   getAllOrder,
+  getUserOrderItems,
 }

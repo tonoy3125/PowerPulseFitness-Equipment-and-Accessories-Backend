@@ -97,8 +97,18 @@ const getAllOrderFromDB = async (query: Record<string, unknown>) => {
   return { meta, result }
 }
 
+const getUserOrderItemsFromDB = async (userId: string) => {
+  // Find the cart by userId
+  const result = await Checkout.find({ userId })
+    .populate('userId')
+    .populate('addToCartProduct.productId')
+
+  return result
+}
+
 export const CheckoutServices = {
   createCheckoutIntoDB,
   getSingleCheckoutByOrderIdFromDB,
   getAllOrderFromDB,
+  getUserOrderItemsFromDB,
 }

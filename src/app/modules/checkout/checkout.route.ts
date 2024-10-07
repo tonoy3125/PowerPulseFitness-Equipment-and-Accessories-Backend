@@ -14,6 +14,12 @@ router.post(
 
 router.get('/', auth('admin'), CheckoutControllers.getAllOrder)
 
+router.get(
+  '/user-order',
+  auth('admin', 'user'),
+  CheckoutControllers.getUserOrderItems,
+)
+
 router.get('/:id', CheckoutControllers.getSingleCheckoutByOrderId)
 
 export const CheckoutRoutes = router

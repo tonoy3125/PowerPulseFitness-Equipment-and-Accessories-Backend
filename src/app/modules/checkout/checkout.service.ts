@@ -4,6 +4,8 @@ import { TCheckout } from './checkout.interface'
 import { Checkout } from './checkout.model'
 import { Product } from '../products/product.model'
 import { AddToCart } from '../addToCart/addToCart.model'
+import QueryBuilder from '../../builder/QueryBuilder'
+import { checkoutProductSearchableField } from './checkout.constant'
 
 // Function to generate a unique 5-digit order number
 const generateOrderNumber = () => {
@@ -79,7 +81,24 @@ const getSingleCheckoutByOrderIdFromDB = async (id: string) => {
   return result
 }
 
+const getAllOrderFromDB = async (query: Record<string, unknown>) => {
+  const checkoutQuery = new QueryBuilder(
+    Checkout.find().populate('userId').populate('addToCartProduct.productId'),
+    query,
+  )
+    .search(checkoutProductSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
+
+  const meta = await checkoutQuery.countTotal()
+  const result = await checkoutQuery.modelQuery
+  return { meta, result }
+}
+
 export const CheckoutServices = {
   createCheckoutIntoDB,
   getSingleCheckoutByOrderIdFromDB,
+  getAllOrderFromDB,
 }

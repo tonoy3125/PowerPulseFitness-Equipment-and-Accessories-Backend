@@ -25,7 +25,21 @@ const getSingleCheckoutByOrderId = catchAsync(async (req, res) => {
   })
 })
 
+const getAllOrder = catchAsync(async (req, res) => {
+  const result = await CheckoutServices.getAllOrderFromDB(req?.query)
+  // const products = result.result // Access the array of products
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Products retrieved Successfully!',
+    meta: result.meta,
+    data: result.result,
+  })
+})
+
 export const CheckoutControllers = {
   createCheckOut,
   getSingleCheckoutByOrderId,
+  getAllOrder,
 }

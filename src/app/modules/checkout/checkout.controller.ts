@@ -52,9 +52,31 @@ const getUserOrderItems = catchAsync(async (req, res) => {
   })
 })
 
+const updateOrderStatus = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const { status } = req.body
+
+  if (!['Pending', 'Shipped', 'Delivered'].includes(status)) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: 'Invalid status update',
+    })
+  }
+
+  const result = await CheckoutServices.updateOrderStatusIntoDB(id, status)
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Order status updated successfully!',
+    data: result,
+  })
+})
+
 export const CheckoutControllers = {
   createCheckOut,
   getSingleCheckoutByOrderId,
   getAllOrder,
   getUserOrderItems,
+  updateOrderStatus,
 }

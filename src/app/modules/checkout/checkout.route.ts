@@ -21,5 +21,10 @@ router.get(
 )
 
 router.get('/:id', CheckoutControllers.getSingleCheckoutByOrderId)
+router.patch(
+  '/status/:id',
+  auth('admin'),
+  CheckoutControllers.updateOrderStatus,
+)
 
 export const CheckoutRoutes = router

@@ -106,9 +106,32 @@ const getUserOrderItemsFromDB = async (userId: string) => {
   return result
 }
 
+const updateOrderStatusIntoDB = async (id: string, newStatus: string) => {
+  const order = await Checkout.findById(id)
+  if (!order) throw new Error('Order not found')
+
+  const currentStatus = order.status
+
+  if (currentStatus === 'Pending' && newStatus === 'Shipped') {
+    order.status = 'Shipped'
+  } else if (currentStatus === 'Shipped' && newStatus === 'Delivered') {
+    order.status = 'Delivered'
+  } else if (currentStatus === 'Pending' && newStatus === 'Delivered') {
+    order.status = 'Delivered'
+  } else {
+    throw new Error(
+      `Cannot update status from ${currentStatus} to ${newStatus}`,
+    )
+  }
+
+  await order.save()
+  return order
+}
+
 export const CheckoutServices = {
   createCheckoutIntoDB,
   getSingleCheckoutByOrderIdFromDB,
   getAllOrderFromDB,
   getUserOrderItemsFromDB,
+  updateOrderStatusIntoDB,
 }

@@ -64,11 +64,23 @@ const updateOrderStatus = catchAsync(async (req, res) => {
   }
 
   const result = await CheckoutServices.updateOrderStatusIntoDB(id, status)
+  const successMessage = `Order ${result.oldStatus} to ${result.newStatus} updated successfully!`
 
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Order status updated successfully!',
+    message: successMessage,
+    data: result,
+  })
+})
+
+const deleteOrder = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await CheckoutServices.deleteOrderFromDB(id)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Order Deleted successfully!',
     data: result,
   })
 })
@@ -79,4 +91,5 @@ export const CheckoutControllers = {
   getAllOrder,
   getUserOrderItems,
   updateOrderStatus,
+  deleteOrder,
 }

@@ -27,4 +27,6 @@ router.patch(
   CheckoutControllers.updateOrderStatus,
 )
 
+router.delete('/:id', auth('admin'), CheckoutControllers.deleteOrder)
+
 export const CheckoutRoutes = router

@@ -125,7 +125,12 @@ const updateOrderStatusIntoDB = async (id: string, newStatus: string) => {
   }
 
   await order.save()
-  return order
+  return { oldStatus: currentStatus, newStatus: order.status }
+}
+
+const deleteOrderFromDB = async (id: string) => {
+  const result = await Checkout.findByIdAndDelete(id)
+  return result
 }
 
 export const CheckoutServices = {
@@ -134,4 +139,5 @@ export const CheckoutServices = {
   getAllOrderFromDB,
   getUserOrderItemsFromDB,
   updateOrderStatusIntoDB,
+  deleteOrderFromDB,
 }

@@ -36,8 +36,14 @@ const updateProductReviewStatusIntoDB = async (
   return result
 }
 
+const deleteProductReviewFromDB = async (id: string) => {
+  const result = await ProductReview.findByIdAndDelete(id)
+  return result
+}
+
 export const ProductReviewServices = {
   createProductReviewIntoDB,
   getAllProductReviewsFromDB,
   updateProductReviewStatusIntoDB,
+  deleteProductReviewFromDB,
 }

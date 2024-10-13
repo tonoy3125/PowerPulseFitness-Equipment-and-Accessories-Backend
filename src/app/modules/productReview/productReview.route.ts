@@ -14,4 +14,10 @@ router.patch(
   ProductReviewControllers.updateProductReviewStatus,
 )
 
+router.delete(
+  '/:id',
+  auth('admin'),
+  ProductReviewControllers.deleteProductReview,
+)
+
 export const ProductReviewRoutes = router

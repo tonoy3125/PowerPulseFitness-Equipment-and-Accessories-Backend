@@ -1,12 +1,17 @@
 import express from 'express'
 import { ProductReviewControllers } from './productReview.controller'
+import auth from '../../middlewares/auth'
 
 const router = express.Router()
 
 router.post('/', ProductReviewControllers.createProductReview)
 
-router.get('/', ProductReviewControllers.getAllProductReviews)
+router.get('/', auth('admin'), ProductReviewControllers.getAllProductReviews)
 
-router.patch('/status', ProductReviewControllers.updateProductReviewStatus)
+router.patch(
+  '/status',
+  auth('admin'),
+  ProductReviewControllers.updateProductReviewStatus,
+)
 
 export const ProductReviewRoutes = router

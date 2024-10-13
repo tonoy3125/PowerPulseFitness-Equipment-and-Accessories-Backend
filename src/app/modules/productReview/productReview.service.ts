@@ -1,3 +1,5 @@
+import QueryBuilder from '../../builder/QueryBuilder'
+import { ReviewProductSearchableField } from './productReview.constant'
 import { TProductReview } from './productReview.interface'
 import { ProductReview } from './productReview.model'
 
@@ -6,9 +8,20 @@ const createProductReviewIntoDB = async (payload: TProductReview) => {
   return result
 }
 
-const getAllProductReviewsFromDB = async () => {
-  const result = await ProductReview.find()
-  return result
+const getAllProductReviewsFromDB = async (query: Record<string, unknown>) => {
+  const reviewQuery = new QueryBuilder(
+    ProductReview.find().populate('productId').populate('userId'),
+    query,
+  )
+    .search(ReviewProductSearchableField)
+    .filter()
+    .sort()
+    .paginate()
+    .fields()
+
+  const meta = await reviewQuery.countTotal()
+  const result = await reviewQuery.modelQuery
+  return { meta, result }
 }
 
 const updateProductReviewStatusIntoDB = async (

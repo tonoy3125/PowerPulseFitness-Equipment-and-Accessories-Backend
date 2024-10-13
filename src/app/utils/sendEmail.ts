@@ -5,10 +5,10 @@ export const sendEmail = async (to: string, resetLink: string) => {
   const transporter = nodemailer.createTransport({
     host: 'smtp.gmail.com',
     port: 587,
-    secure: config.NODE_ENV === 'production', // Use `true` for port 465, `false` for all other ports
+    secure: false, // Use `true` for port 465, `false` for all other ports
     auth: {
-      user: 'shaifshajedt@gmail.com', // use your email
-      pass: 'zsur sivd eakq yajc', // use your app password, not the account password
+      user: config.email_user,
+      pass: config.email_pass,
     },
   })
 

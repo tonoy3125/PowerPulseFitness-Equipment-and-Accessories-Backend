@@ -6,6 +6,20 @@ const createProductReviewIntoDB = async (payload: TProductReview) => {
   return result
 }
 
+
+const updateProductReviewStatusIntoDB = async (
+  reviewId: string,
+  status: 'Pending' | 'Accepted' | 'Rejected',
+) => {
+  const result = await ProductReview.findByIdAndUpdate(
+    reviewId,
+    { status },
+    { new: true },
+  )
+  return result
+}
+
 export const ProductReviewServices = {
   createProductReviewIntoDB,
+  updateProductReviewStatusIntoDB,
 }

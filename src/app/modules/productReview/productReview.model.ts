@@ -13,6 +13,14 @@ const ProductReviewSchema = new Schema<TProductReview>(
       ref: 'User',
       required: true,
     },
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+    },
     rating: {
       type: Number,
       required: true,
@@ -22,6 +30,11 @@ const ProductReviewSchema = new Schema<TProductReview>(
     review: {
       type: String,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: ['Pending', 'Accepted', 'Rejected'],
+      default: 'Pending',
     },
     isDeleted: {
       type: Boolean,

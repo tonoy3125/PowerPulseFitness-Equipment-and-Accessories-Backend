@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/', ProductReviewControllers.createProductReview)
 
-router.get('/', ProductReviewControllers.createProductReview)
+router.get('/', ProductReviewControllers.getAllProductReviews)
 
 router.patch('/status', ProductReviewControllers.updateProductReviewStatus)
 

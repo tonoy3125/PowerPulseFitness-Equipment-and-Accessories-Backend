@@ -6,6 +6,10 @@ const createProductReviewIntoDB = async (payload: TProductReview) => {
   return result
 }
 
+const getAllProductReviewsFromDB = async () => {
+  const result = await ProductReview.find()
+  return result
+}
 
 const updateProductReviewStatusIntoDB = async (
   reviewId: string,
@@ -21,5 +25,6 @@ const updateProductReviewStatusIntoDB = async (
 
 export const ProductReviewServices = {
   createProductReviewIntoDB,
+  getAllProductReviewsFromDB,
   updateProductReviewStatusIntoDB,
 }

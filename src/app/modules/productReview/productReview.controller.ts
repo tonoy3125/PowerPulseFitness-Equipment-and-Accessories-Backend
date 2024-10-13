@@ -13,6 +13,16 @@ const createProductReview = catchAsync(async (req, res) => {
   })
 })
 
+const getAllProductReviews = catchAsync(async (req, res) => {
+  const result = await ProductReviewServices.getAllProductReviewsFromDB()
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Product Reviews retrived successfully!',
+    data: result,
+  })
+})
+
 const updateProductReviewStatus = catchAsync(async (req, res) => {
   const { reviewId, status } = req.body // Pass reviewId and status in the request body
   const result = await ProductReviewServices.updateProductReviewStatusIntoDB(
@@ -29,5 +39,6 @@ const updateProductReviewStatus = catchAsync(async (req, res) => {
 
 export const ProductReviewControllers = {
   createProductReview,
+  getAllProductReviews,
   updateProductReviewStatus,
 }

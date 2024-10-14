@@ -14,8 +14,8 @@ app.use(cookieParser())
 app.use(
   cors({
     origin: [
-      // 'http://localhost:5173',
-      'https://power-pulse-fitness-equipment-and-accessories-frontend.vercel.app',
+      'http://localhost:5173',
+      // 'https://power-pulse-fitness-equipment-and-accessories-frontend.vercel.app',
     ],
     credentials: true,
   }),

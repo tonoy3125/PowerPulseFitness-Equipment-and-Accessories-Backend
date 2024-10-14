@@ -4,6 +4,23 @@ import { TProductReview } from './productReview.interface'
 import { ProductReview } from './productReview.model'
 
 const createProductReviewIntoDB = async (payload: TProductReview) => {
+  const { userId, productId } = payload
+
+  // Check if there's a pending review
+  const existingPendingReview = await ProductReview.findOne({
+    userId,
+    productId,
+    status: 'Pending',
+  })
+
+  // If there's an existing pending review, delete it
+  if (existingPendingReview) {
+    await ProductReview.findOneAndDelete({
+      _id: existingPendingReview._id,
+    })
+  }
+
+  // Proceed with creating the new review
   const result = await ProductReview.create(payload)
   return result
 }

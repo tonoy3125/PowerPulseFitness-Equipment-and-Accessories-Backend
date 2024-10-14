@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import QueryBuilder from '../../builder/QueryBuilder'
 import { ReviewProductSearchableField } from './productReview.constant'
 import { TProductReview } from './productReview.interface'
@@ -41,8 +42,15 @@ const getAllProductReviewsFromDB = async (query: Record<string, unknown>) => {
   return { meta, result }
 }
 
-const getProductAcceptedReviewsFromDB = async () => {
-  const result = await ProductReview.find({ status: 'Accepted' })
+const getProductAcceptedReviewsFromDB = async (productId: string) => {
+  const filter: any = { status: 'Accepted' }
+
+  // If productId is provided, include it in the filter
+  if (productId) {
+    filter.productId = productId
+  }
+
+  const result = await ProductReview.find(filter)
   return result
 }
 

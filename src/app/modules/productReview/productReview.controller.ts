@@ -36,6 +36,30 @@ const getAcceptedProductReviews = catchAsync(async (req, res) => {
   })
 })
 
+const getPendingProductReviews = catchAsync(async (req, res) => {
+  const userId = req.user!._id
+  const { productId } = req.query
+
+  if (!productId) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: 'Product ID is required',
+    })
+  }
+
+  const result = await ProductReviewServices.getPendingProductReviewsFromDB(
+    productId as string,
+    userId.toString(),
+  )
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Pending reviews retrieved successfully!',
+    data: result,
+  })
+})
+
 const updateProductReviewStatus = catchAsync(async (req, res) => {
   const { reviewId, status } = req.body // Pass reviewId and status in the request body
   const result = await ProductReviewServices.updateProductReviewStatusIntoDB(
@@ -65,6 +89,7 @@ export const ProductReviewControllers = {
   createProductReview,
   getAllProductReviews,
   getAcceptedProductReviews,
+  getPendingProductReviews,
   updateProductReviewStatus,
   deleteProductReview,
 }

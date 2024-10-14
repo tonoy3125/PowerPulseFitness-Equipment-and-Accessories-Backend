@@ -10,6 +10,12 @@ router.get('/', auth('admin'), ProductReviewControllers.getAllProductReviews)
 
 router.get('/accepted', ProductReviewControllers.getAcceptedProductReviews)
 
+router.get(
+  '/pending',
+  auth('admin', 'user'),
+  ProductReviewControllers.getPendingProductReviews,
+)
+
 router.patch(
   '/status',
   auth('admin'),

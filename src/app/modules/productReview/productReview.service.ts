@@ -46,6 +46,18 @@ const getProductAcceptedReviewsFromDB = async () => {
   return result
 }
 
+const getPendingProductReviewsFromDB = async (
+  productId: string,
+  userId: string,
+) => {
+  const result = await ProductReview.find({
+    productId,
+    userId,
+    status: 'Pending',
+  })
+  return result
+}
+
 const updateProductReviewStatusIntoDB = async (
   reviewId: string,
   status: 'Pending' | 'Accepted' | 'Rejected',
@@ -67,6 +79,7 @@ export const ProductReviewServices = {
   createProductReviewIntoDB,
   getAllProductReviewsFromDB,
   getProductAcceptedReviewsFromDB,
+  getPendingProductReviewsFromDB,
   updateProductReviewStatusIntoDB,
   deleteProductReviewFromDB,
 }

@@ -8,6 +8,8 @@ router.post('/', ProductReviewControllers.createProductReview)
 
 router.get('/', auth('admin'), ProductReviewControllers.getAllProductReviews)
 
+router.get('/accepted', ProductReviewControllers.getAcceptedProductReviews)
+
 router.patch(
   '/status',
   auth('admin'),

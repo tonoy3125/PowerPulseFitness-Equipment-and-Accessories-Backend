@@ -41,6 +41,11 @@ const getAllProductReviewsFromDB = async (query: Record<string, unknown>) => {
   return { meta, result }
 }
 
+const getProductAcceptedReviewsFromDB = async () => {
+  const result = await ProductReview.find({ status: 'Accepted' })
+  return result
+}
+
 const updateProductReviewStatusIntoDB = async (
   reviewId: string,
   status: 'Pending' | 'Accepted' | 'Rejected',
@@ -61,6 +66,7 @@ const deleteProductReviewFromDB = async (id: string) => {
 export const ProductReviewServices = {
   createProductReviewIntoDB,
   getAllProductReviewsFromDB,
+  getProductAcceptedReviewsFromDB,
   updateProductReviewStatusIntoDB,
   deleteProductReviewFromDB,
 }

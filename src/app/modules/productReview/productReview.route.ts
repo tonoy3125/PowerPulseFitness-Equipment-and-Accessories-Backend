@@ -23,9 +23,21 @@ router.patch(
 )
 
 router.delete(
+  '/pending',
+  auth('user', 'admin'),
+  ProductReviewControllers.deletePendingReview,
+)
+
+router.delete(
   '/:id',
   auth('admin'),
   ProductReviewControllers.deleteProductReview,
+)
+
+router.delete(
+  '/pending',
+  auth('user', 'admin'),
+  ProductReviewControllers.deletePendingReview,
 )
 
 export const ProductReviewRoutes = router

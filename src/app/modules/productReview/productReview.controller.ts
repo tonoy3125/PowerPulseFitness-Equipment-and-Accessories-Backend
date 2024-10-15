@@ -28,8 +28,17 @@ const getAllProductReviews = catchAsync(async (req, res) => {
 
 const getAcceptedProductReviews = catchAsync(async (req, res) => {
   const { productId } = req.query
-  const result =
-    await ProductReviewServices.getProductAcceptedReviewsFromDB(productId)
+
+  if (!productId) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: 'Product ID is required',
+    })
+  }
+
+  const result = await ProductReviewServices.getProductAcceptedReviewsFromDB(
+    productId as string,
+  )
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -87,6 +96,37 @@ const deleteProductReview = catchAsync(async (req, res) => {
   })
 })
 
+const deletePendingReview = catchAsync(async (req, res) => {
+  const userId = req.user!._id
+  const { productId } = req.query
+
+  if (!productId) {
+    return res.status(httpStatus.BAD_REQUEST).json({
+      success: false,
+      message: 'Product ID is required',
+    })
+  }
+
+  const result = await ProductReviewServices.deletePendingReviewFromDB(
+    userId.toString(),
+    productId as string,
+  )
+
+  if (!result) {
+    return res.status(httpStatus.NOT_FOUND).json({
+      success: false,
+      message: 'Pending review not found',
+    })
+  }
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Pending review deleted successfully!',
+    data: result,
+  })
+})
+
 export const ProductReviewControllers = {
   createProductReview,
   getAllProductReviews,
@@ -94,4 +134,5 @@ export const ProductReviewControllers = {
   getPendingProductReviews,
   updateProductReviewStatus,
   deleteProductReview,
+  deletePendingReview,
 }

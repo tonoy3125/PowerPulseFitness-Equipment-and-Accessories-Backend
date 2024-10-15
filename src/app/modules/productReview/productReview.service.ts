@@ -83,6 +83,15 @@ const deleteProductReviewFromDB = async (id: string) => {
   return result
 }
 
+const deletePendingReviewFromDB = async (userId: string, productId: string) => {
+  const result = await ProductReview.findOneAndDelete({
+    userId: userId,
+    productId: productId,
+    status: 'Pending',
+  })
+  return result
+}
+
 export const ProductReviewServices = {
   createProductReviewIntoDB,
   getAllProductReviewsFromDB,
@@ -90,4 +99,5 @@ export const ProductReviewServices = {
   getPendingProductReviewsFromDB,
   updateProductReviewStatusIntoDB,
   deleteProductReviewFromDB,
+  deletePendingReviewFromDB,
 }

@@ -17,7 +17,7 @@ const signUp = async (payload: TUser) => {
 const login = async (payload: TLoginUser) => {
   // check if the user is exits
   const user = await User.isUserExistsByEmail(payload.email)
-  console.log(user)
+  // console.log(user)
 
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User does not exists')
@@ -29,7 +29,7 @@ const login = async (payload: TLoginUser) => {
   // )
   // console.log(isPasswordMatch)
 
-  console.log(payload.password)
+  // console.log(payload.password)
 
   if (!(await User.isPasswordMatch(payload.password, user.password))) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Password Does Not Match')

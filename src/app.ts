@@ -4,9 +4,13 @@ import cookieParser from 'cookie-parser'
 import globalErrorHandler from './app/middlewares/globalErrorHandler'
 import NotFound from './app/errors/notFound'
 import { routes } from './app/routes'
+import Stripe from 'stripe'
+import config from './app/config'
 
 const app: Application = express()
 // const port = 3000
+
+export const stripe = new Stripe(config.stripe_secret_key as string)
 
 // parser
 app.use(express.json())

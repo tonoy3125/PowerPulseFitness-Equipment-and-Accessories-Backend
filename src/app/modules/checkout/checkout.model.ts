@@ -90,6 +90,12 @@ const CheckoutSchema = new Schema<TCheckout>(
     orderNumber: {
       type: String,
     },
+    cardName: {
+      type: String,
+    },
+    transactionId: {
+      type: String,
+    },
     deliveryProcess: {
       type: String,
     },

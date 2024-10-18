@@ -3,6 +3,7 @@ import validateRequest from '../../middlewares/validateRequest'
 import { UserValidations } from '../user/user.validation'
 import { AuthControllers } from './auth.controller'
 import { AuthValidations } from './auth.validation'
+import auth from '../../middlewares/auth'
 const router = express.Router()
 
 router.post(
@@ -16,6 +17,8 @@ router.post(
   validateRequest(AuthValidations.loginValidationSchema),
   AuthControllers.login,
 )
+
+router.get('/user', auth('admin', 'user'), AuthControllers.getUserByUserId)
 
 router.post(
   '/refresh-token',

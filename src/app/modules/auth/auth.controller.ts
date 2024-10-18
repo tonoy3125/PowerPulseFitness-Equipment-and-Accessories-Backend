@@ -34,6 +34,17 @@ const login = catchAsync(async (req, res) => {
   })
 })
 
+const getUserByUserId = catchAsync(async (req, res) => {
+  const userId = req.user!._id // Assuming req.user contains the authenticated user's data
+  const result = await AuthServices.getUserByUserIdFromDB(userId)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User retrived successfully!',
+    data: result,
+  })
+})
+
 const refreshToken = catchAsync(async (req, res) => {
   const { refreshToken } = req.cookies
 
@@ -88,6 +99,7 @@ const resetPassword = catchAsync(async (req, res) => {
 export const AuthControllers = {
   signUp,
   login,
+  getUserByUserId,
   refreshToken,
   forgetPassword,
   resetPassword,

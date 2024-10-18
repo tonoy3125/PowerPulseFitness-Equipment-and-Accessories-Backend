@@ -60,6 +60,11 @@ const login = async (payload: TLoginUser) => {
   }
 }
 
+const getUserByUserIdFromDB = async (userId: string) => {
+  const result = await User.findOne({ _id: userId })
+  return result
+}
+
 const refreshToken = async (token: string) => {
   const decoded = verifyToken(token, config.jwt_refresh_secret as string)
   // console.log(decoded)
@@ -185,6 +190,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
 export const AuthServices = {
   signUp,
   login,
+  getUserByUserIdFromDB,
   refreshToken,
   forgetPassword,
   resetPassword,

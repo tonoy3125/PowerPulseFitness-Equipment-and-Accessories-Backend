@@ -15,7 +15,12 @@ const createAddressIntoDB = async (payload: TAddress) => {
   return result
 }
 
+const getUserAddressFromDB = async (userId: string) => {
+  const result = await Address.find({ userId }).populate('userId')
+  return result
+}
 
 export const AddressServices = {
   createAddressIntoDB,
+  getUserAddressFromDB,
 }

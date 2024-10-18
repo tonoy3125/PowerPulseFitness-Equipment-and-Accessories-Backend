@@ -14,8 +14,18 @@ const createAddress = catchAsync(async (req, res) => {
   })
 })
 
-
+const getUserAddress = catchAsync(async (req, res) => {
+  const userId = req.user!._id
+  const result = await AddressServices.getUserAddressFromDB(userId)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User Address retrived successfully!',
+    data: result,
+  })
+})
 
 export const AddressControllers = {
   createAddress,
+  getUserAddress,
 }

@@ -38,7 +38,9 @@ const login = async (payload: TLoginUser) => {
   const jwtPayload = {
     email: user?.email,
     role: user?.role,
+    fullName: user.fullName,
   }
+  console.log(jwtPayload)
 
   const accessToken = createToken(
     jwtPayload,
@@ -80,6 +82,7 @@ const refreshToken = async (token: string) => {
   const jwtPayload = {
     email: user?.email,
     role: user?.role,
+    fullName: user.fullName,
   }
 
   const accessToken = createToken(
@@ -109,6 +112,7 @@ const forgetPassword = async (email: string) => {
   const jwtPayload = {
     email: user.email,
     role: user.role,
+    fullName: user.fullName,
   }
 
   const resetToken = createToken(
@@ -158,6 +162,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
     const jwtPayload = {
       email: user?.email,
       role: user?.role,
+      fullName: user.fullName,
     }
 
     const accessToken = createToken(

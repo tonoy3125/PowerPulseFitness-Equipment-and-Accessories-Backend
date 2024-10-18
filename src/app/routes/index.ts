@@ -6,6 +6,7 @@ import { AddToCartRoutes } from '../modules/addToCart/addToCart.route'
 import { CheckoutRoutes } from '../modules/checkout/checkout.route'
 import { ProductReviewRoutes } from '../modules/productReview/productReview.route'
 import PaymentRoute from '../modules/payment/payment.route'
+import { AddressRoutes } from '../modules/address/address.route'
 
 const router = express.Router()
 
@@ -13,6 +14,10 @@ const routerModules = [
   {
     path: '/auth',
     route: AuthRoutes,
+  },
+  {
+    path: '/address',
+    route: AddressRoutes,
   },
   {
     path: '/products',

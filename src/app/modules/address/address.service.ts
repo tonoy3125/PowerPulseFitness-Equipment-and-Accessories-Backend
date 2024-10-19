@@ -20,7 +20,19 @@ const getUserAddressFromDB = async (userId: string) => {
   return result
 }
 
+const updateAddressIntoDB = async (id: string, payload: Partial<TAddress>) => {
+  const result = await Address.findByIdAndUpdate(id, payload, { new: true })
+  return result
+}
+
+const deleteAddressFromDB = async (id: string) => {
+  const result = await Address.findByIdAndDelete(id)
+  return result
+}
+
 export const AddressServices = {
   createAddressIntoDB,
   getUserAddressFromDB,
+  updateAddressIntoDB,
+  deleteAddressFromDB,
 }

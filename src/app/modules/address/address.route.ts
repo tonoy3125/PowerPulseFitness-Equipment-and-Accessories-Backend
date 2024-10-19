@@ -8,4 +8,8 @@ router.post('/', AddressControllers.createAddress)
 
 router.get('/', auth('admin', 'user'), AddressControllers.getUserAddress)
 
+router.put('/:id', AddressControllers.updateAddress)
+
+router.delete('/:id', AddressControllers.deleteAddress)
+
 export const AddressRoutes = router

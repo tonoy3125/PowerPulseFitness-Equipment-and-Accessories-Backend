@@ -25,7 +25,31 @@ const getUserAddress = catchAsync(async (req, res) => {
   })
 })
 
+const updateAddress = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await AddressServices.updateAddressIntoDB(id, req.body)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Deafult Address updated successfully!',
+    data: result,
+  })
+})
+
+const deleteAddress = catchAsync(async (req, res) => {
+  const { id } = req.params
+  const result = await AddressServices.deleteAddressFromDB(id)
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Address Deleted successfully!',
+    data: result,
+  })
+})
+
 export const AddressControllers = {
   createAddress,
   getUserAddress,
+  updateAddress,
+  deleteAddress,
 }

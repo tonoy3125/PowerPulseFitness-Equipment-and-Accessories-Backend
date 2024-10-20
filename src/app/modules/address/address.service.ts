@@ -2,12 +2,13 @@ import { TAddress } from './address.interface'
 import { Address } from './address.model'
 
 const createAddressIntoDB = async (payload: TAddress) => {
-  // Check if the user already has an address
-  const existingAddress = await Address.findOne({ userId: payload.userId })
-
-  if (existingAddress) {
-    // If an address exists, remove it
-    await Address.deleteOne({ _id: existingAddress._id })
+  // If the new address should be the default
+  if (payload.isDefault) {
+    // Find and update the existing default address
+    await Address.updateOne(
+      { userId: payload.userId, isDefault: true },
+      { isDefault: false },
+    )
   }
 
   // Create and save the new address

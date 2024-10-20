@@ -31,7 +31,7 @@ const updateAddress = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Deafult Address updated successfully!',
+    message: 'Default Address updated successfully!',
     data: result,
   })
 })

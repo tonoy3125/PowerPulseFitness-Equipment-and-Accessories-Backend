@@ -35,6 +35,10 @@ const AddressSchema = new Schema<TAddress>(
     phone: {
       type: Number,
     },
+    isDefault: {
+      type: Boolean,
+      default: false,
+    },
     isDeleted: {
       type: Boolean,
       default: false,

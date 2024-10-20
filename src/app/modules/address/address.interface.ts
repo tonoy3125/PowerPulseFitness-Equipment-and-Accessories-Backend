@@ -11,5 +11,6 @@ export type TAddress = {
   town?: string
   postCode?: number
   phone?: number
+  isDefault: boolean
   isDeleted: boolean
 }

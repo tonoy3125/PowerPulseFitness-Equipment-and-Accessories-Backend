@@ -69,6 +69,16 @@ const getSingleProductInCategory = catchAsync(async (req, res) => {
   })
 })
 
+const getCategoryProductCounts = catchAsync(async (req, res) => {
+  const result = await ProductServices.getCategoryProductCounts()
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Category Product Count retrived successfully!',
+    data: result,
+  })
+})
+
 const updateProduct = catchAsync(async (req, res) => {
   const { id } = req.params
   const files = req.files as { [fieldname: string]: Express.Multer.File[] }
@@ -193,6 +203,7 @@ export const ProductControllers = {
   getSingleProduct,
   getSingleCategory,
   getSingleProductInCategory,
+  getCategoryProductCounts,
   updateProduct,
   updateDiscount,
   removeExpiredDiscounts,

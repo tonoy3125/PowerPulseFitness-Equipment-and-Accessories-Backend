@@ -106,6 +106,34 @@ const getProductByIdInCategory = async (category: string, id: string) => {
   return product
 }
 
+const getCategoryProductCounts = async () => {
+  const result = await Product.aggregate([
+    {
+      $match: {
+        isDeleted: false, // Add any condition to filter products (optional)
+      },
+    },
+    {
+      $group: {
+        _id: '$category', // Group by category
+        totalProducts: { $sum: 1 }, // Count products in each category
+      },
+    },
+    {
+      $project: {
+        _id: 0, // Exclude `_id` field from result
+        category: '$_id', // Rename `_id` to category
+        totalProducts: 1, // Include the total count
+      },
+    },
+    {
+      $sort: { totalProducts: -1 }, // Sort categories by product count in descending order
+    },
+  ])
+
+  return result
+}
+
 const updateProductIntoDB = async (
   id: string,
   payload: Partial<TProduct>,
@@ -292,6 +320,7 @@ export const ProductServices = {
   getSingleProductFromDB,
   getProductsByCategoryFromDB,
   getProductByIdInCategory,
+  getCategoryProductCounts,
   updateProductIntoDB,
   updateDiscountIntoDB,
   checkAndRemoveExpiredDiscounts,

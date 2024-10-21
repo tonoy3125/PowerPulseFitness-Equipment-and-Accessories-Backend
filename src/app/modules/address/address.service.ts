@@ -22,6 +22,17 @@ const getUserAddressFromDB = async (userId: string) => {
 }
 
 const updateAddressIntoDB = async (id: string, payload: Partial<TAddress>) => {
+  // If the address being updated is set to default, update the previous default
+  if (payload.isDefault) {
+    const existingAddress = await Address.findById(id)
+    if (existingAddress && existingAddress.isDefault === false) {
+      await Address.updateOne(
+        { userId: existingAddress.userId, isDefault: true },
+        { isDefault: false },
+      )
+    }
+  }
+
   const result = await Address.findByIdAndUpdate(id, payload, { new: true })
   return result
 }

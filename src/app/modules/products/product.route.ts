@@ -31,11 +31,16 @@ router.get('/', ProductControllers.getAllProduct)
 router.get('/discounts', ProductControllers.getDiscountedProducts)
 router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
+router.get('/category-count', ProductControllers.getCategoryProductCounts)
+
 router.get('/:id', ProductControllers.getSingleProduct)
 
 router.get('/category/:category', ProductControllers.getSingleCategory)
 
 router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
+
+router.get('/category-count', ProductControllers.getCategoryProductCounts)
+
 router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
 router.put(

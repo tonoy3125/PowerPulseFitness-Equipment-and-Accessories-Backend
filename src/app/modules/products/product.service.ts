@@ -67,8 +67,8 @@ const getProductsByCategoryFromDB = async (category: string) => {
     },
     {
       $group: {
-        _id: '$category', // Group by category
-        totalCount: { $sum: 1 }, // Count each product in the category
+        _id: '$category',
+        totalCount: { $sum: 1 },
         products: {
           // Include all product details
           $push: {
@@ -153,7 +153,6 @@ const getTotalCountStockAndOutOfStock = async () => {
     stockQuantity: { $eq: 0 },
   })
 
-  // Return both counts
   return {
     totalInStockCount,
     totalOutOfStockCount,

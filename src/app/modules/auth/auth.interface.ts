@@ -5,6 +5,12 @@ export type TLoginUser = {
   password: string
 }
 
+export type TChangePassword = {
+  oldPassword: string
+  newPassword: string
+  confirmNewPassword: string
+}
+
 export type TResetPassword = {
   newPassword: string
   confirmNewPassword: string

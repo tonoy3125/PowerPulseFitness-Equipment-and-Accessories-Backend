@@ -34,6 +34,21 @@ const login = catchAsync(async (req, res) => {
   })
 })
 
+const changePassword = catchAsync(async (req, res) => {
+  const userId = req.user!._id // Assuming req.user contains the authenticated user's data
+  const { ...passwordData } = req.body
+
+  // Call the AuthServices.changePassword method
+  const result = await AuthServices.changePassword(userId, passwordData)
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password changed successfully',
+    data: result,
+  })
+})
+
 const getUserByUserId = catchAsync(async (req, res) => {
   const userId = req.user!._id // Assuming req.user contains the authenticated user's data
   const result = await AuthServices.getUserByUserIdFromDB(userId)
@@ -99,6 +114,7 @@ const resetPassword = catchAsync(async (req, res) => {
 export const AuthControllers = {
   signUp,
   login,
+  changePassword,
   getUserByUserId,
   refreshToken,
   forgetPassword,

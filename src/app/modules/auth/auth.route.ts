@@ -18,6 +18,13 @@ router.post(
   AuthControllers.login,
 )
 
+router.post(
+  '/change-password',
+  auth('admin', 'user'),
+  validateRequest(AuthValidations.changePasswordValidationSchema),
+  AuthControllers.changePassword,
+)
+
 router.get('/user', auth('admin', 'user'), AuthControllers.getUserByUserId)
 
 router.post(

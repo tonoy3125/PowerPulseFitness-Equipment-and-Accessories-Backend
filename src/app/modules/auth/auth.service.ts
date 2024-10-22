@@ -2,7 +2,7 @@ import httpStatus from 'http-status'
 import { AppError } from '../../errors/AppError'
 import { TUser } from '../user/user.interface'
 import { User } from '../user/user.model'
-import { TLoginUser, TResetPassword } from './auth.interface'
+import { TChangePassword, TLoginUser, TResetPassword } from './auth.interface'
 import bcrypt from 'bcrypt'
 
 import createToken, { verifyToken } from './auth.utils'
@@ -40,7 +40,7 @@ const login = async (payload: TLoginUser) => {
     role: user?.role,
     fullName: user.fullName,
   }
-  console.log(jwtPayload)
+  // console.log(jwtPayload)
 
   const accessToken = createToken(
     jwtPayload,
@@ -59,6 +59,55 @@ const login = async (payload: TLoginUser) => {
     accessToken,
     refreshToken,
     user,
+  }
+}
+
+const changePassword = async (userId: string, payload: TChangePassword) => {
+  // Find the user by ID
+  const user = await User.findById(userId)
+
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User does not exist')
+  }
+
+  // Verify if the old password matches
+  if (!(await User.isPasswordMatch(payload.oldPassword, user.password))) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'Current password is incorrect')
+  }
+
+  // Check if the new password matches the confirmation password
+  if (payload?.newPassword !== payload?.confirmNewPassword) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'New passwords and Confirm New Password do not match',
+    )
+  }
+
+  // Hash the new password
+  const newHashedPassword = await bcrypt.hash(
+    payload?.newPassword,
+    Number(config.bcrypt_salt_rounds),
+  )
+
+  // Update the user's password
+  await User.findOneAndUpdate({
+    password: newHashedPassword,
+  })
+  // Generate new tokens after password change (optional)
+  const jwtPayload = {
+    email: user.email,
+    role: user.role,
+    fullName: user.fullName,
+  }
+
+  const accessToken = createToken(
+    jwtPayload,
+    config.jwt_access_secret as string,
+    config.jwt_access_expires_in as string,
+  )
+
+  return {
+    accessToken,
   }
 }
 
@@ -195,6 +244,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
 export const AuthServices = {
   signUp,
   login,
+  changePassword,
   getUserByUserIdFromDB,
   refreshToken,
   forgetPassword,

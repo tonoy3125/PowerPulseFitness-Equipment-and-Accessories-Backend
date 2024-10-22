@@ -116,7 +116,13 @@ const getCategoryProductCounts = async () => {
     {
       $group: {
         _id: '$category', // Group by category
-        totalProducts: { $sum: 1 }, // Count products in each category
+        totalProducts: { $sum: 1 }, // Count total products in each category
+        inStockCount: {
+          $sum: { $cond: [{ $gt: ['$stockQuantity', 0] }, 1, 0] },
+        }, // Count in-stock products
+        outOfStockCount: {
+          $sum: { $cond: [{ $eq: ['$stockQuantity', 0] }, 1, 0] },
+        }, // Count out-of-stock products
       },
     },
     {
@@ -124,6 +130,8 @@ const getCategoryProductCounts = async () => {
         _id: 0, // Exclude `_id` field from result
         category: '$_id', // Rename `_id` to category
         totalProducts: 1, // Include the total count
+        inStockCount: 1, // Include in-stock count
+        outOfStockCount: 1, // Include out-of-stock count
       },
     },
     {
@@ -132,6 +140,24 @@ const getCategoryProductCounts = async () => {
   ])
 
   return result
+}
+
+const getTotalCountStockAndOutOfStock = async () => {
+  // Get the count of products that are in stock
+  const totalInStockCount = await Product.countDocuments({
+    stockQuantity: { $gt: 0 },
+  })
+
+  // Get the count of products that are out of stock
+  const totalOutOfStockCount = await Product.countDocuments({
+    stockQuantity: { $eq: 0 },
+  })
+
+  // Return both counts
+  return {
+    totalInStockCount,
+    totalOutOfStockCount,
+  }
 }
 
 const updateProductIntoDB = async (
@@ -321,6 +347,7 @@ export const ProductServices = {
   getProductsByCategoryFromDB,
   getProductByIdInCategory,
   getCategoryProductCounts,
+  getTotalCountStockAndOutOfStock,
   updateProductIntoDB,
   updateDiscountIntoDB,
   checkAndRemoveExpiredDiscounts,

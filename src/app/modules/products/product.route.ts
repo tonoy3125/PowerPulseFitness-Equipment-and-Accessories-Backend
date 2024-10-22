@@ -33,6 +33,8 @@ router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
 router.get('/category-count', ProductControllers.getCategoryProductCounts)
 
+router.get('/stock-count', ProductControllers.getTotalCountStockAndOutOfStock)
+
 router.get('/:id', ProductControllers.getSingleProduct)
 
 router.get('/category/:category', ProductControllers.getSingleCategory)

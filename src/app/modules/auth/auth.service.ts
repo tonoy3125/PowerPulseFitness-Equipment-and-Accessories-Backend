@@ -107,6 +107,7 @@ const changePassword = async (userId: string, payload: TChangePassword) => {
   )
 
   return {
+    user,
     accessToken,
   }
 }
@@ -227,6 +228,7 @@ const resetPassword = async (payload: TResetPassword, token: string) => {
     )
 
     return {
+      user,
       accessToken,
       refreshToken,
     }

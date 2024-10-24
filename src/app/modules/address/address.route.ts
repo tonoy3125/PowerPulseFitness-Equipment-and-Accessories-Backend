@@ -13,3 +13,4 @@ router.put('/:id', AddressControllers.updateAddress)
 router.delete('/:id', AddressControllers.deleteAddress)
 
 export const AddressRoutes = router
+

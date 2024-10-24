@@ -43,7 +43,7 @@ router.get('/:category/:id', ProductControllers.getSingleProductInCategory)
 
 router.get('/category-count', ProductControllers.getCategoryProductCounts)
 
-router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
+// router.get('/advertise', ProductControllers.getAllAdvertiseDiscountProduct)
 
 router.put(
   '/:id',

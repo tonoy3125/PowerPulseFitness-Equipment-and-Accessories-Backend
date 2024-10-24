@@ -1,4 +1,4 @@
-# Assignment 3 - PowerPulseFitness Equipment and Accessories Backend Application
+# PowerPulseFitness Equipment and Accessories Backend Application
 
 # Description
 

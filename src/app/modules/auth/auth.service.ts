@@ -83,6 +83,14 @@ const changePassword = async (userId: string, payload: TChangePassword) => {
     )
   }
 
+  // Check if the new password is the same as the old password
+  if (await User.isPasswordMatch(payload.newPassword, user.password)) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'New password must be different from the current password',
+    )
+  }
+
   // Hash the new password
   const newHashedPassword = await bcrypt.hash(
     payload?.newPassword,

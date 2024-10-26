@@ -24,11 +24,12 @@ PowerPulse Fitness is a web application with a backend system that manages fitne
 
 ## Technology Stack
 
-- **Programming Language:** TypeScript
+- **Programming Language:** TypeScript,Node.js
 - **Web Framework:** Express.js
 - **Database:** MongoDB (using Mongoose for ODM)
 - **Authentication:** JSON Web Tokens (JWT)
 - **Error Handling:** Custom middleware
+- **File Storage & Media Management:** Cloudinary (for image storage)
 - **Deployment:** Deployed on Vercel
 
 ## Installation and Setup

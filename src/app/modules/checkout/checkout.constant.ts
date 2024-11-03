@@ -1,6 +1,6 @@
 export const checkoutProductSearchableField = [
-  'name',
+  'fullName',
   'email',
-  'phone',
+  // 'phone',
   'status',
 ]

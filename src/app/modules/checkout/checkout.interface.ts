@@ -24,4 +24,5 @@ export type TCheckout = {
   status: 'Pending' | 'Shipped' | 'Delivered'
   deliveryProcess?: string
   isDeleted: boolean
+  fullName?: string
 }

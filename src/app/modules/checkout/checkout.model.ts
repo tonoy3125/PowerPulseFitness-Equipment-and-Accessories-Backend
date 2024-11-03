@@ -103,8 +103,19 @@ const CheckoutSchema = new Schema<TCheckout>(
       type: Boolean,
       default: false,
     },
+    fullName: {
+      type: String,
+      required: false, // This field is optional
+    },
   },
   { timestamps: true },
 )
+
+CheckoutSchema.pre('save', function (next) {
+  if (this.isModified('firstName') || this.isModified('lastName')) {
+    this.fullName = `${this.firstName} ${this.lastName}`
+  }
+  next()
+})
 
 export const Checkout = model<TCheckout>('Checkout', CheckoutSchema)
